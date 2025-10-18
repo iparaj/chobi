@@ -4,55 +4,52 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paraj — Photography</title>
-  <meta name="description" content="Photography portfolio" />
+  <meta name="description" content="Photography portfolio with albums and per‑album passcodes" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#0b0c0f; --card:#14161a; --text:#e8ecf1; --muted:#a8b3c1; --accent:#7dd3fc;
-      --maxw:1200px; --radius:18px;
-    }
+    :root{ --bg:#0b0c0f; --card:#14161a; --text:#e8ecf1; --muted:#a8b3c1; --accent:#7dd3fc; --maxw:1200px; --radius:18px; }
     *{box-sizing:border-box}
     html,body{margin:0;height:100%}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:radial-gradient(1200px 600px at 80% -20%, #10223555, transparent), var(--bg);color:var(--text);}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:radial-gradient(1200px 600px at 80% -20%, #10223555, transparent), var(--bg);color:var(--text)}
     a{color:inherit;text-decoration:none}
     header{position:sticky;top:0;background:linear-gradient(180deg, #0b0c0ff5, #0b0c0fdd 60%, #0b0c0f00);backdrop-filter:saturate(140%) blur(6px);z-index:50}
     .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:16px;padding:14px 20px}
     .brand{font-weight:800;letter-spacing:0.5px}
     .spacer{flex:1}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #243041;border-radius:999px;background:#10141b;color:var(--text);}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #243041;border-radius:999px;background:#10141b;color:var(--text)}
     .btn:hover{border-color:#2f4157;background:#0e1319}
     main{max-width:var(--maxw);margin:0 auto;padding:24px 20px 80px}
     .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;align-items:center;padding:42px 0 12px}
-    .hero h1{font-size:clamp(28px, 4vw, 46px);line-height:1.1;margin:0 0 10px}
+    .hero h1{font-size:clamp(28px,4vw,46px);line-height:1.1;margin:0 0 10px}
     .hero p{color:var(--muted);margin:0 0 18px}
     .chip{display:inline-block;padding:6px 10px;border:1px solid #263241;border-radius:999px;color:#cbe8ff;background:#0f1620;margin-right:8px;font-size:12px}
-    .gallery{margin-top:28px;display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
-    .card{position:relative;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid #1c2532}
-    .card img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
-    .card:hover img{transform:scale(1.03)}
-    .card .meta{position:absolute;inset:auto 10px 10px 10px;background:linear-gradient(180deg,transparent, #0008);padding:8px 10px;border-radius:12px;color:#e9f2fb;font-size:12px}
-    /* Masonry-like spans */
+    .albums{margin-top:28px;display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .album-card{position:relative;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid #1c2532;cursor:pointer}
+    .album-card img{width:100%;height:220px;object-fit:cover;display:block;filter:saturate(1.05);transition:transform .4s ease}
+    .album-card:hover img{transform:scale(1.03)}
+    .album-info{padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+    .album-title{font-weight:600}
+    .lock{font-size:12px;color:#cbd5e1;border:1px solid #2a394f;border-radius:999px;padding:4px 8px;background:#0f1620}
+    .span-4{grid-column:span 4}
+    .span-6{grid-column:span 6}
+    /* Gallery */
+    .hidden{display:none}
+    .gallery-grid{margin-top:18px;display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .photo{position:relative;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid #1c2532}
+    .photo img{width:100%;height:100%;object-fit:cover;display:block}
     .span-3{grid-column:span 3}
     .span-4{grid-column:span 4}
     .span-6{grid-column:span 6}
     .tall{grid-row:span 2}
-    .about{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:26px}
     .panel{background:var(--card);border:1px solid #1c2532;border-radius:var(--radius);padding:18px}
     h2{margin:0 0 12px;font-size:22px}
     p{line-height:1.6}
+    .crumbs{display:flex;gap:8px;align-items:center;margin:10px 0 0;color:var(--muted)}
+    .pwd-form{display:flex;gap:10px;align-items:center;margin:12px 0}
+    input[type="password"],input[type="text"],input[type="email"],textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #253243;background:#0e141b;color:var(--text)}
     footer{max-width:var(--maxw);margin:0 auto;padding:28px 20px 56px;color:var(--muted)}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    input,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #253243;background:#0e141b;color:var(--text)}
-    label{font-size:12px;color:#b8c7d9}
-    .credit{opacity:.6}
-    @media (max-width:900px){
-      .hero{grid-template-columns:1fr}
-      .about{grid-template-columns:1fr}
-      .span-6{grid-column:span 12}
-      .span-4{grid-column:span 6}
-      .span-3{grid-column:span 6}
-    }
+    @media(max-width:900px){ .span-6{grid-column:span 12} .span-4{grid-column:span 6} .span-3{grid-column:span 6} .hero{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
@@ -60,9 +57,9 @@
     <nav class="nav">
       <div class="brand">Paraj • Photography</div>
       <div class="spacer"></div>
-      <a class="btn" href="#contact" aria-label="Contact">Contact</a>
-      <a class="btn" href="#about" aria-label="About">About</a>
-      <a class="btn" href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a class="btn" href="#albums">Albums</a>
+      <a class="btn" href="#about">About</a>
+      <a class="btn" href="#contact">Contact</a>
     </nav>
   </header>
 
@@ -70,51 +67,54 @@
     <section class="hero" aria-labelledby="title">
       <div>
         <div class="chip">Portfolio</div>
-        <div class="chip">Travel</div>
-        <div class="chip">Street</div>
-        <h1 id="title">Frames that feel.</h1>
-        <p>Selected photographs from journeys, streets, and quiet moments. High‑res, fast loading, mobile‑friendly.</p>
-        <a class="btn" href="#gallery">View Gallery</a>
+        <div class="chip">Client Galleries</div>
+        <h1 id="title">Albums & private deliveries.</h1>
+        <p>Create multiple albums. Lock any album with its own passcode. All client‑side—perfect for GitHub Pages. (Note: client‑side locks are for privacy/convenience, not bank‑level security.)</p>
+        <a class="btn" href="#albums">View Albums</a>
       </div>
       <div class="panel">
-        <strong>Quick tip:</strong> Replace the <em>images/</em> folder with your photos (keep the filenames or update the list below). Thumbnails are automatically lazy‑loaded; clicking opens a lightbox.
+        <strong>How it works:</strong>
+        <ol style="margin:6px 0 0 18px;color:var(--muted)">
+          <li>Define albums in the <code>ALBUMS</code> array (title, slug, cover, images).</li>
+          <li>Optionally add a passcode—stored as a SHA‑256 hash.</li>
+          <li>Click an album → enter passcode (if set) → view gallery.</li>
+        </ol>
       </div>
     </section>
 
-    <section id="gallery" class="gallery" aria-label="Photo gallery">
-      <!-- Example cards. Replace src with your own files in images/ -->
-      <figure class="card span-6 tall"><img src="images/01.jpg" alt="Mountain at dawn" loading="lazy"><figcaption class="meta">Himalaya • 2023</figcaption></figure>
-      <figure class="card span-3"><img src="images/02.jpg" alt="Street portrait" loading="lazy"><figcaption class="meta">Kolkata • 2024</figcaption></figure>
-      <figure class="card span-3"><img src="images/03.jpg" alt="Monsoon clouds" loading="lazy"><figcaption class="meta">Assam • 2022</figcaption></figure>
-      <figure class="card span-4 tall"><img src="images/04.jpg" alt="City at night" loading="lazy"><figcaption class="meta">Mumbai • 2022</figcaption></figure>
-      <figure class="card span-4"><img src="images/05.jpg" alt="Forest trail" loading="lazy"><figcaption class="meta">Meghalaya • 2021</figcaption></figure>
-      <figure class="card span-4"><img src="images/06.jpg" alt="Seaside long exposure" loading="lazy"><figcaption class="meta">Goa • 2021</figcaption></figure>
-      <figure class="card span-6"><img src="images/07.jpg" alt="Temple silhouette at sunset" loading="lazy"><figcaption class="meta">Hampi • 2020</figcaption></figure>
-      <figure class="card span-6"><img src="images/08.jpg" alt="Desert road" loading="lazy"><figcaption class="meta">Rajasthan • 2023</figcaption></figure>
+    <!-- Album Grid -->
+    <section id="albums" class="albums" aria-label="Albums">
+      <!-- Populated by JS from ALBUMS -->
     </section>
 
-    <section id="about" class="about" aria-label="About and contact">
-      <article class="panel">
-        <h2>About</h2>
-        <p>Hi, I’m <strong>Paraj</strong> — a researcher and photographer based in India. I gravitate toward natural light, strong geometry, and quiet human stories. For assignments or prints, drop me a note.</p>
-        <p class="credit">This site runs on GitHub Pages. No frameworks, just clean HTML/CSS/JS for speed. © <span id="year"></span> Paraj.</p>
-      </article>
-      <form id="contact" class="panel" aria-labelledby="contact-head" onsubmit="sendMail(event)">
-        <h2 id="contact-head">Contact</h2>
-        <div class="grid-2">
-          <div>
-            <label for="name">Name</label>
-            <input id="name" name="name" placeholder="Your name" required />
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" required />
-          </div>
+    <!-- Album Viewer -->
+    <section id="viewer" class="hidden" aria-label="Album viewer">
+      <div class="crumbs"><a href="#albums" id="backLink">← Back to albums</a> • <span id="albumName"></span></div>
+      <div id="lockPanel" class="panel hidden">
+        <h2>Enter passcode</h2>
+        <form class="pwd-form" onsubmit="unlock(event)">
+          <input id="pwd" type="password" placeholder="Album passcode" autocomplete="current-password" required />
+          <button class="btn" type="submit">Unlock</button>
+          <small id="pwdStatus"></small>
+        </form>
+      </div>
+      <div id="gallery" class="gallery-grid hidden"></div>
+    </section>
+
+    <section id="about" class="panel" style="margin-top:42px">
+      <h2>About</h2>
+      <p>Hi, I’m <strong>Paraj</strong> — a researcher and photographer based in India. For assignments or prints, drop me a note.</p>
+      <p style="opacity:.6">© <span id="year"></span> Paraj. GitHub Pages, no frameworks.</p>
+    </section>
+
+    <section id="contact" class="panel" style="margin-top:14px">
+      <h2>Contact</h2>
+      <form onsubmit="sendMail(event)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <input id="name" placeholder="Your name" required />
+          <input id="email" type="email" placeholder="you@example.com" required />
         </div>
-        <div style="margin-top:12px">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="4" placeholder="Hello Paraj, I’d like to…" required></textarea>
-        </div>
+        <textarea id="message" rows="4" placeholder="Hello Paraj, I’d like to…" required style="margin-top:12px"></textarea>
         <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
           <button class="btn" type="submit">Send</button>
           <small id="status" aria-live="polite"></small>
@@ -127,28 +127,141 @@
     <div>Built with ❤ — <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
   </footer>
 
-  <!-- Lightweight Lightbox -->
+  <!-- Lightbox -->
   <dialog id="lightbox" style="padding:0;border:none;background:#000;max-width:min(95vw,1200px);max-height:90vh;border-radius:14px;">
     <img id="lightImg" alt="Full view" style="width:100%;height:auto;display:block" />
   </dialog>
 
   <script>
-    // Year stamp
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Click-to-zoom lightbox
+    // ---- CONFIGURE YOUR ALBUMS HERE ----
+    // passcode: set to null for public album; otherwise provide the SHA-256 hash (hex) of the passcode string.
+    // Use the helper at the bottom (hashPasscode('mypin').then(console.log)) to generate once and paste here.
+    const ALBUMS = [
+      {
+        title: 'Travel — Himalaya', slug: 'himalaya', cover: 'images/himalaya/cover.jpg',
+        passcodeHash: null,
+        images: [
+          'images/himalaya/01.jpg','images/himalaya/02.jpg','images/himalaya/03.jpg','images/himalaya/04.jpg'
+        ]
+      },
+      {
+        title: 'Client — A & R Wedding', slug: 'ar-wedding', cover: 'images/ar-wedding/cover.jpg',
+        passcodeHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', // example: SHA-256 of '' (empty)
+        images: [
+          'images/ar-wedding/01.jpg','images/ar-wedding/02.jpg','images/ar-wedding/03.jpg','images/ar-wedding/04.jpg'
+        ]
+      },
+      {
+        title: 'Street — Kolkata', slug: 'kolkata-street', cover: 'images/kolkata/cover.jpg',
+        passcodeHash: null,
+        images: [
+          'images/kolkata/01.jpg','images/kolkata/02.jpg','images/kolkata/03.jpg','images/kolkata/04.jpg'
+        ]
+      }
+    ];
+
+    // ---- RENDER ALBUM GRID ----
+    const albumsEl = document.getElementById('albums');
+    function renderAlbums(){
+      albumsEl.innerHTML = '';
+      ALBUMS.forEach((a,i)=>{
+        const card = document.createElement('article');
+        card.className = 'album-card span-4';
+        card.setAttribute('data-slug', a.slug);
+        card.innerHTML = `
+          <img src="${a.cover}" alt="${a.title} cover" loading="lazy"/>
+          <div class="album-info">
+            <div class="album-title">${a.title}</div>
+            <div class="lock">${a.passcodeHash ? '🔒 Private' : 'Public'}</div>
+          </div>`;
+        card.addEventListener('click', ()=> openAlbum(a.slug));
+        albumsEl.appendChild(card);
+      });
+    }
+    renderAlbums();
+
+    // ---- VIEWER LOGIC ----
+    const viewer = document.getElementById('viewer');
+    const lockPanel = document.getElementById('lockPanel');
+    const gallery = document.getElementById('gallery');
+    const albumName = document.getElementById('albumName');
+    const backLink = document.getElementById('backLink');
+
+    backLink.addEventListener('click', ()=>{
+      viewer.classList.add('hidden');
+      document.getElementById('albums').classList.remove('hidden');
+      history.replaceState(null,'','#albums');
+    });
+
+    let ACTIVE_ALBUM = null;
+
+    async function openAlbum(slug){
+      const album = ALBUMS.find(a=>a.slug===slug);
+      if(!album) return;
+      ACTIVE_ALBUM = album;
+      albumName.textContent = album.title;
+      document.getElementById('albums').classList.add('hidden');
+      viewer.classList.remove('hidden');
+      history.replaceState(null,'',`#album-${slug}`);
+
+      if(album.passcodeHash){
+        lockPanel.classList.remove('hidden');
+        gallery.classList.add('hidden');
+        document.getElementById('pwd').focus();
+      } else {
+        lockPanel.classList.add('hidden');
+        renderGallery(album);
+      }
+    }
+
+    function renderGallery(album){
+      gallery.innerHTML = '';
+      album.images.forEach((src,idx)=>{
+        const fig = document.createElement('figure');
+        fig.className = `photo ${ idx % 8 === 0 ? 'span-6 tall' : idx % 3 === 0 ? 'span-4' : 'span-3' }`;
+        fig.innerHTML = `<img src="${src}" alt="${album.title} ${idx+1}" loading="lazy">`;
+        gallery.appendChild(fig);
+      });
+      gallery.classList.remove('hidden');
+      // Lightbox binding
+      bindLightbox();
+    }
+
+    // ---- PASSCODE (client-side, SHA-256 check) ----
+    async function hashPasscode(str){
+      const enc = new TextEncoder().encode(str);
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    async function unlock(e){
+      e.preventDefault();
+      const pwd = document.getElementById('pwd').value;
+      const status = document.getElementById('pwdStatus');
+      status.textContent = 'Checking…';
+      const h = await hashPasscode(pwd);
+      if(ACTIVE_ALBUM && h === ACTIVE_ALBUM.passcodeHash){
+        status.textContent = 'Unlocked';
+        lockPanel.classList.add('hidden');
+        renderGallery(ACTIVE_ALBUM);
+      } else {
+        status.textContent = 'Incorrect passcode';
+      }
+    }
+
+    // ---- LIGHTBOX ----
     const lb = document.getElementById('lightbox');
     const lightImg = document.getElementById('lightImg');
-    document.querySelectorAll('.gallery img').forEach(img => {
-      img.addEventListener('click', () => {
-        lightImg.src = img.src;
-        lightImg.alt = img.alt;
-        lb.showModal();
+    function bindLightbox(){
+      document.querySelectorAll('#gallery img').forEach(img=>{
+        img.addEventListener('click', ()=>{ lightImg.src = img.src; lightImg.alt = img.alt; lb.showModal(); });
       });
-    });
-    lb.addEventListener('click', (e)=>{ if(e.target===lb) lb.close(); });
+    }
+    lb.addEventListener('click', e=>{ if(e.target===lb) lb.close(); });
 
-    // Simple contact form: opens user mail client. For a real backend, replace with Formspree or Netlify Forms.
+    // ---- CONTACT MAILTO ----
     function sendMail(e){
       e.preventDefault();
       const name = document.getElementById('name').value.trim();
@@ -159,7 +272,12 @@
       window.location.href = `mailto:your@email.com?subject=${subject}&body=${body}`;
       document.getElementById('status').textContent = 'Opening your email app…';
     }
+
+    // Deep-link open if hash matches an album
+    if(location.hash.startsWith('#album-')){
+      const slug = location.hash.replace('#album-','');
+      openAlbum(slug);
+    }
   </script>
 </body>
 </html>
-

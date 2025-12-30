@@ -7,43 +7,38 @@
 </head>
 <body>
 
-<!-- ===== HERO SECTION ===== -->
 <header class="hero">
-  <img id="heroImage">
+  <img src="images/album-a/a1.jpg" id="heroImage">
   <div class="hero-overlay">
-    <h1 id="heroTitle"></h1>
-    <p id="heroSubtitle"></p>
+    <h1>Your Name</h1>
+    <p>Photography · Travel · Landscape</p>
   </div>
 </header>
 
-<!-- ===== ALBUM TILES ===== -->
 <main class="album-section">
   <div class="album-tiles" id="albumTiles"></div>
 </main>
 
 <script src="data/albums.js"></script>
+
 <script>
-  /* ----- HERO ----- */
-  document.getElementById("heroImage").src = siteConfig.heroImage;
-  document.getElementById("heroTitle").textContent = siteConfig.heroTitle;
-  document.getElementById("heroSubtitle").textContent = siteConfig.heroSubtitle;
+  if (typeof albums === "undefined") {
+    document.getElementById("albumTiles").innerHTML =
+      "<p style='color:red'>albums.js not loaded</p>";
+  } else {
+    const container = document.getElementById("albumTiles");
 
-  /* ----- ALBUM TILES ----- */
-  const container = document.getElementById("albumTiles");
-
-  albums.forEach(album => {
-    const tile = document.createElement("a");
-    tile.href = `album.html?album=${album.id}`;
-    tile.className = "album-tile";
-
-    tile.innerHTML = `
-      <img src="${album.tileImage}">
-      <div class="tile-overlay">
-        <span>${album.title}</span>
-      </div>
-    `;
-    container.appendChild(tile);
-  });
+    albums.forEach(album => {
+      const tile = document.createElement("a");
+      tile.href = `album.html?album=${album.id}`;
+      tile.className = "album-tile";
+      tile.innerHTML = `
+        <img src="${album.tileImage}">
+        <div class="tile-overlay"><span>${album.title}</span></div>
+      `;
+      container.appendChild(tile);
+    });
+  }
 </script>
 
 </body>

@@ -299,3 +299,17 @@
     display: none; /* disable hover overlay on touch devices */
   }
 }
+/* Album grid image sizing (IMPORTANT) */
+.grid img {
+  width: 100%;
+  height: 220px;        /* Controls album image size */
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.grid img:hover {
+  transform: scale(1.03);
+  opacity: 0.95;
+}

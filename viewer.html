@@ -185,6 +185,26 @@ document.addEventListener("keydown", e => {
   if (e.key === "i") toggleInfo();
   if (e.key === "Escape") exitViewer();
 });
+
+/* ===============================
+   CAPTION SHOW / AUTO-HIDE
+================================ */
+let captionTimer = null;
+
+const imageWrapper = document.getElementById("imageWrapper");
+const caption = document.getElementById("viewerCaption");
+
+function showCaption() {
+  caption.classList.add("show");
+
+  clearTimeout(captionTimer);
+  captionTimer = setTimeout(() => {
+    caption.classList.remove("show");
+  }, 2000);
+}
+
+/* Show caption ONLY when mouse moves on image */
+imageWrapper.addEventListener("mousemove", showCaption);
 </script>
 
 </body>

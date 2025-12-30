@@ -7,7 +7,7 @@ const siteConfig = {
 const albums = [
   {
     id: "album-a",
-    title: "Album A",
+    title: "Singapore 2025",
     tileImage: "images/album-a/a2.jpg",
     images: ["a1.jpg", "a2.jpg", "a3.jpg"]
   },

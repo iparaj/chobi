@@ -217,3 +217,63 @@
   background: rgba(0, 0, 0, 0.9);
 }
 
+/* ===============================
+   HOVER TITLE + SUBTITLE (ALBUM)
+================================ */
+
+/* Each grid item */
+.grid-item {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* Image already sized by .grid img */
+.grid-item img {
+  transition: transform 0.4s ease;
+}
+
+/* Overlay layer */
+.hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Text container */
+.hover-text {
+  text-align: center;
+  color: white;
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+.hover-text h3 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.hover-text p {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* Hover effects */
+.grid-item:hover .hover-overlay {
+  opacity: 1;
+}
+
+.grid-item:hover .hover-text {
+  transform: translateY(0);
+}
+
+.grid-item:hover img {
+  transform: scale(1.05);
+}

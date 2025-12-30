@@ -75,3 +75,39 @@
   font-size: 1.6rem;
   letter-spacing: 1px;
 }
+
+/* ===== ALBUM IMAGE GRID (album.html) ===== */
+
+.grid {
+  max-width: 1300px;      /* limits width on large screens */
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.grid img {
+  width: 100%;
+  height: 220px;          /* THIS fixes "too large" images */
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.grid img:hover {
+  transform: scale(1.03);
+  opacity: 0.95;
+}
+
+/* ===== MOBILE TUNING ===== */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .grid img {
+    height: 160px;
+  }
+}

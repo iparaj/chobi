@@ -97,7 +97,7 @@
   margin: 40px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  gap: 10px;
 }
 
 .grid a {

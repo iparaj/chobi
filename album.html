@@ -54,11 +54,10 @@
   });
 
   /* ===== ACTIONS ===== */
-  function startAlbumSlideshow() {
-    window.location.href =
-      `viewer.html?album=${albumId}&img=${album.images[0]}`;
-  }
-
+function startAlbumSlideshow() {
+  window.location.href =
+    `viewer.html?album=${albumId}&img=${album.images[0]}&slideshow=1`;
+}
   function shareAlbum() {
     navigator.clipboard.writeText(window.location.href);
     alert("Album link copied");

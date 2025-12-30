@@ -74,6 +74,7 @@ let uiTimer = null;
 const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album");
 const imgName = params.get("img");
+const autoSlideshow = params.get("slideshow") === "1";
 
 const album = albums.find(a => a.id === albumId);
 const images = album.images;
@@ -107,6 +108,9 @@ function loadImage(index) {
 }
 
 loadImage(currentIndex);
+if (autoSlideshow) {
+  startSlideshow();
+}
 
 /* ===============================
    NAVIGATION

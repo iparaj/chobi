@@ -15,7 +15,6 @@
 <div class="grid" id="gallery"></div>
 
 <script src="data/albums.js"></script>
-<script src="data/photoinfo.js"></script>
 
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -27,26 +26,15 @@
   const gallery = document.getElementById("gallery");
 
   album.images.forEach(img => {
-    const key = `${albumId}/${img}`;
-    const info = photoInfo[key] || {};
+    const link = document.createElement("a");
+    link.href = `viewer.html?album=${albumId}&img=${img}`;
+    link.className = "album-image";
 
-    const item = document.createElement("a");
-    item.href = `viewer.html?album=${albumId}&img=${img}`;
-    item.className = "grid-item";
-
-    item.innerHTML = `
-      <div class="image-wrapper">
-        <img src="images/${albumId}/${img}" alt="">
-        <div class="hover-overlay">
-          <div class="hover-text">
-            <h3>${info.title || ""}</h3>
-            <p>${info.location || ""}</p>
-          </div>
-        </div>
-      </div>
+    link.innerHTML = `
+      <img src="images/${albumId}/${img}" alt="">
     `;
 
-    gallery.appendChild(item);
+    gallery.appendChild(link);
   });
 </script>
 

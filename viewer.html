@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* ===== Navigation arrows ===== */
+    /* ===============================
+       ARROW NAVIGATION
+    ================================ */
     .nav-arrow {
       position: fixed;
       top: 50%;
@@ -20,61 +22,39 @@
       z-index: 50;
     }
 
-    .nav-arrow:hover { opacity: 1; }
-    .nav-left { left: 90px; }
-    .nav-right { right: 30px; }
+    .nav-arrow:hover {
+      opacity: 1;
+    }
+
+    .nav-left {
+      left: 90px;
+    }
+
+    .nav-right {
+      right: 30px;
+    }
   </style>
 </head>
 
 <body class="viewer">
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<!-- CLOSE -->
-<button class="close-btn" onclick="exitViewer()">✕</button>
-
-<!-- SIDEBAR -->
-=======
-<!-- ===== CLOSE ===== -->
+<!-- ===== CLOSE BUTTON ===== -->
 <button class="close-btn" title="Back to album" onclick="exitViewer()">✕</button>
 
 <!-- ===== LEFT SIDEBAR ===== -->
->>>>>>> parent of 2877ab4 (r3)
-=======
-<!-- ===== CLOSE ===== -->
-<button class="close-btn" title="Back to album" onclick="exitViewer()">✕</button>
-
-<!-- ===== LEFT SIDEBAR ===== -->
->>>>>>> parent of 2877ab4 (r3)
 <div class="sidebar">
-  <button id="btnFullscreen" title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
-  <button id="btnPlay" title="Slideshow" onclick="toggleSlideshow()">▶</button>
-  <button id="btnInfo" title="Photo Info" onclick="toggleInfo()">ℹ</button>
+  <button title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
+  <button title="Slideshow" onclick="startSlideshow()">▶</button>
+  <button title="Photo Info" onclick="toggleInfo()">ℹ</button>
   <button title="Share" onclick="shareImage()">🔗</button>
   <button title="Comments" onclick="alert('Comments need backend')">💬</button>
 </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<!-- NAV ARROWS -->
-<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
-<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
-
-<!-- IMAGE -->
-=======
 <!-- ===== ARROWS ===== -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
-<!-- ===== IMAGE + HOVER TEXT ===== -->
->>>>>>> parent of 2877ab4 (r3)
-=======
-<!-- ===== ARROWS ===== -->
-<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
-<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
-
-<!-- ===== IMAGE + HOVER TEXT ===== -->
->>>>>>> parent of 2877ab4 (r3)
+<!-- ===== MAIN IMAGE WITH HOVER TEXT ===== -->
 <div class="viewer-main">
   <div class="viewer-image-wrapper">
     <img id="mainImage" alt="Viewing image">
@@ -87,27 +67,13 @@
   </div>
 </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<!-- INFO PANEL -->
-=======
 <!-- ===== INFO PANEL ===== -->
->>>>>>> parent of 2877ab4 (r3)
-=======
-<!-- ===== INFO PANEL ===== -->
->>>>>>> parent of 2877ab4 (r3)
 <div class="info-panel" id="infoPanel"></div>
 
 <script src="data/albums.js"></script>
 <script src="data/photoinfo.js"></script>
 
 <script>
-  /* ===============================
-     STATE
-  ================================ */
-  let slideshowTimer = null;
-  let slideshowPlaying = false;
-
   const params = new URLSearchParams(window.location.search);
   const albumId = params.get("album");
   const imgName = params.get("img");
@@ -118,142 +84,54 @@
   let currentIndex = images.indexOf(imgName);
   if (currentIndex === -1) currentIndex = 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-/* ===============================
-   LOAD IMAGE
-================================ */
-function loadImage(index) {
-  const imgFile = images[index];
-  document.getElementById("mainImage").src =
-    `images/${albumId}/${imgFile}`;
+  const imgFile = images[currentIndex];
+  const imgPath = `images/${albumId}/${imgFile}`;
 
+  const mainImage = document.getElementById("mainImage");
+  mainImage.src = imgPath;
+
+  /* ---- Hover text ---- */
   const info = photoInfo[`${albumId}/${imgFile}`] || {};
   document.getElementById("hoverTitle").textContent = info.title || "";
   document.getElementById("hoverSubtitle").textContent = info.location || "";
-=======
-  /* ===============================
-     LOAD IMAGE
-  ================================ */
-  function loadImage(index) {
-    const imgFile = images[index];
-    const imgPath = `images/${albumId}/${imgFile}`;
-    document.getElementById("mainImage").src = imgPath;
 
-    const info = photoInfo[`${albumId}/${imgFile}`] || {};
-    document.getElementById("hoverTitle").textContent = info.title || "";
-    document.getElementById("hoverSubtitle").textContent = info.location || "";
-
-    document.getElementById("infoPanel").innerHTML = info.title ? `
+  /* ---- Viewer info panel ---- */
+  if (info.title) {
+    document.getElementById("infoPanel").innerHTML = `
       <h3>${info.title}</h3>
       <p><b>Camera:</b> ${info.camera || ""}</p>
       <p><b>Lens:</b> ${info.lens || ""}</p>
       <p><b>Exposure:</b> ${info.exposure || ""}</p>
       <p><b>Location:</b> ${info.location || ""}</p>
       <p>${info.description || ""}</p>
-    ` : "";
-  }
->>>>>>> parent of 2877ab4 (r3)
-
-=======
-  /* ===============================
-     LOAD IMAGE
-  ================================ */
-  function loadImage(index) {
-    const imgFile = images[index];
-    const imgPath = `images/${albumId}/${imgFile}`;
-    document.getElementById("mainImage").src = imgPath;
-
-    const info = photoInfo[`${albumId}/${imgFile}`] || {};
-    document.getElementById("hoverTitle").textContent = info.title || "";
-    document.getElementById("hoverSubtitle").textContent = info.location || "";
-
-    document.getElementById("infoPanel").innerHTML = info.title ? `
-      <h3>${info.title}</h3>
-      <p><b>Camera:</b> ${info.camera || ""}</p>
-      <p><b>Lens:</b> ${info.lens || ""}</p>
-      <p><b>Exposure:</b> ${info.exposure || ""}</p>
-      <p><b>Location:</b> ${info.location || ""}</p>
-      <p>${info.description || ""}</p>
-    ` : "";
+    `;
   }
 
->>>>>>> parent of 2877ab4 (r3)
-  loadImage(currentIndex);
-
-  /* ===============================
-     NAVIGATION
-  ================================ */
+  /* ---- Navigation ---- */
   function goTo(index) {
     window.location.href =
       `viewer.html?album=${albumId}&img=${images[index]}`;
   }
 
   function nextImage() {
-    stopSlideshow();
     currentIndex = (currentIndex + 1) % images.length;
     goTo(currentIndex);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-/* ===============================
-   SLIDESHOW
-================================ */
-function toggleSlideshow() {
-  playing ? stopSlideshow() : startSlideshow();
-}
-=======
-=======
->>>>>>> parent of 2877ab4 (r3)
   function prevImage() {
-    stopSlideshow();
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     goTo(currentIndex);
   }
-<<<<<<< HEAD
->>>>>>> parent of 2877ab4 (r3)
-=======
->>>>>>> parent of 2877ab4 (r3)
 
   function exitViewer() {
-    stopSlideshow();
     window.location.href = `album.html?album=${albumId}`;
   }
 
-  /* ===============================
-     SLIDESHOW
-  ================================ */
-  function toggleSlideshow() {
-    slideshowPlaying ? stopSlideshow() : startSlideshow();
-  }
-
-  function startSlideshow() {
-    slideshowPlaying = true;
-    document.getElementById("btnPlay").textContent = "⏸";
-
-    slideshowTimer = setInterval(() => {
-      currentIndex = (currentIndex + 1) % images.length;
-      goTo(currentIndex);
-    }, 3000);
-  }
-
-  function stopSlideshow() {
-    slideshowPlaying = false;
-    document.getElementById("btnPlay").textContent = "▶";
-    clearInterval(slideshowTimer);
-  }
-
-  /* ===============================
-     INFO PANEL
-  ================================ */
+  /* ---- Controls ---- */
   function toggleInfo() {
     document.getElementById("infoPanel").classList.toggle("show");
   }
 
-  /* ===============================
-     UTILITIES
-  ================================ */
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -267,17 +145,63 @@ function toggleSlideshow() {
     alert("Link copied");
   }
 
-  /* ===============================
-     KEYBOARD
-  ================================ */
+  function startSlideshow() {
+    alert("Slideshow can be added next");
+  }
+
+  /* ---- Keyboard ---- */
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") nextImage();
     if (e.key === "ArrowLeft") prevImage();
     if (e.key === "Escape") exitViewer();
-    if (e.key === " ") toggleSlideshow();
-    if (e.key === "i") toggleInfo();
   });
 </script>
 
 </body>
 </html>
+/* ===============================
+   VIEWER IMAGE HOVER TEXT
+================================ */
+
+.viewer-image-wrapper {
+  position: relative;
+}
+
+.viewer-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.viewer-hover-text {
+  text-align: center;
+  color: white;
+  transform: translateY(12px);
+  transition: transform 0.3s ease;
+}
+
+.viewer-hover-text h3 {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.viewer-hover-text p {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* Hover interaction */
+.viewer-image-wrapper:hover .viewer-hover {
+  opacity: 1;
+}
+
+.viewer-image-wrapper:hover .viewer-hover-text {
+  transform: translateY(0);
+}

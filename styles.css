@@ -1,92 +1,77 @@
-/* ===== Reset ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: system-ui, sans-serif;
-    transition: background 0.3s, color 0.3s;
-}
-
-/* ===== Themes ===== */
-body.light {
-    background: #ffffff;
-    color: #111;
-}
-
-body.dark {
-    background: #0f0f0f;
-    color: #f5f5f5;
-}
-
-/* ===== Theme Button ===== */
-.theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 8px 12px;
-    cursor: pointer;
-    border: none;
-    background: #888;
-    color: #fff;
-    border-radius: 20px;
-}
-
-/* ===== Hero ===== */
+/* ===== HERO ===== */
 .hero {
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  position: relative;
+  height: 80vh;
+  overflow: hidden;
 }
 
-.hero h1 {
-    font-size: 3rem;
-    letter-spacing: 1px;
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.hero p {
-    font-size: 1.2rem;
-    opacity: 0.8;
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background: rgba(0,0,0,0.35);
+  text-align: center;
 }
 
-/* ===== Gallery ===== */
-.gallery {
-    max-width: 1200px;
-    margin: auto;
-    padding: 40px 20px;
+.hero-overlay h1 {
+  font-size: 3.5rem;
+  letter-spacing: 2px;
 }
 
-.album {
-    margin-bottom: 60px;
+.hero-overlay p {
+  font-size: 1.2rem;
+  opacity: 0.9;
 }
 
-.album h2 {
-    margin-bottom: 20px;
-    font-size: 1.8rem;
+/* ===== ALBUM TILES ===== */
+.album-section {
+  padding: 60px 40px;
 }
 
-/* ===== Image Grid ===== */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 15px;
+.album-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
 }
 
-.grid img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    transition: transform 0.3s, opacity 0.3s;
-    cursor: pointer;
+.album-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.grid img:hover {
-    transform: scale(1.03);
-    opacity: 0.9;
+.album-tile img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.album-tile:hover img {
+  transform: scale(1.08);
+}
+
+.tile-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.35);
+}
+
+.tile-overlay span {
+  color: white;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
 }

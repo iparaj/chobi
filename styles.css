@@ -12,7 +12,7 @@
 ================================ */
 .hero {
   position: relative;
-  height: 60vh;
+  height: 40vh;
   overflow: hidden;
 }
 
@@ -277,3 +277,73 @@
 .grid-item:hover img {
   transform: scale(1.05);
 }
+
+/* ===============================
+   HOVER TITLE + SUBTITLE (ALBUM)
+================================ */
+
+/* Each clickable item */
+.grid-item {
+  display: block;
+  position: relative;
+}
+
+/* Wrapper around image + overlay */
+.image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+/* Image already sized by .grid img */
+.image-wrapper img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+/* Overlay */
+.hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Text */
+.hover-text {
+  text-align: center;
+  color: white;
+  transform: translateY(12px);
+  transition: transform 0.3s ease;
+}
+
+.hover-text h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.hover-text p {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* Hover interaction */
+.grid-item:hover .hover-overlay {
+  opacity: 1;
+}
+
+.grid-item:hover .hover-text {
+  transform: translateY(0);
+}
+
+.grid-item:hover img {
+  transform: scale(1.05);
+}
+

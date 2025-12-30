@@ -1,32 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Album</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<a href="index.html">← Back to Albums</a>
-<h2 id="albumTitle"></h2>
+<a href="index.html" style="margin:20px; display:inline-block;">← Back to Albums</a>
+<h2 id="albumTitle" style="text-align:center; margin-bottom:30px;"></h2>
 
+<!-- IMPORTANT: grid stays the same -->
 <div class="grid" id="gallery"></div>
 
 <script src="data/albums.js"></script>
+<script src="data/photoinfo.js"></script>
+
 <script>
   const params = new URLSearchParams(window.location.search);
   const albumId = params.get("album");
 
   const album = albums.find(a => a.id === albumId);
-
   document.getElementById("albumTitle").textContent = album.title;
 
   const gallery = document.getElementById("gallery");
 
   album.images.forEach(img => {
-    const el = document.createElement("a");
-    el.href = `viewer.html?album=${albumId}&img=${img}`;
-    el.innerHTML = `<img src="images/${albumId}/${img}">`;
-    gallery.appendChild(el);
+    const key = `${albumId}/${img}`;
+    const info = photoInfo[key] || {};
+
+    const item = document.createElement("a");
+    item.href = `viewer.html?album=${albumId}&img=${img}`;
+    item.className = "grid-item";
+
+    item.innerHTML = `
+      <div class="image-wrapper">
+        <img src="images/${albumId}/${img}" alt="">
+        <div class="hover-overlay">
+          <div class="hover-text">
+            <h3>${info.title || ""}</h3>
+            <p>${info.location || ""}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    gallery.appendChild(item);
   });
 </script>
 

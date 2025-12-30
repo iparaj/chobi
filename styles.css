@@ -305,3 +305,37 @@
 .viewer-image-wrapper:hover .viewer-hover-text {
   transform: translateY(0);
 }
+
+/* ===============================
+   INFO PANEL (VIEWER)
+================================ */
+.info-panel {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 20px;
+
+  transition: right 0.35s ease;
+  z-index: 40;
+  overflow-y: auto;
+}
+
+.info-panel.show {
+  right: 0;
+}
+
+.info-panel h3 {
+  margin-bottom: 10px;
+}
+
+.info-panel p {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+

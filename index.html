@@ -3,42 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <title>iParaj</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
+<!-- HERO -->
 <header class="hero">
-  <img src="images/album-a/a1.jpg" id="heroImage">
+  <img src="images/album-a/1.jpg" alt="Hero image">
   <div class="hero-overlay">
     <h1>iParaj</h1>
-    <p>Welcome to my page</p>
+    <p>Photography Portfolio</p>
   </div>
 </header>
 
+<!-- ALBUM TILES -->
 <main class="album-section">
   <div class="album-tiles" id="albumTiles"></div>
 </main>
 
-<script src="data/albums.js"></script>
+<!-- Load album index -->
+<script src="data/album-index.js"></script>
 
 <script>
-  if (typeof albums === "undefined") {
-    document.getElementById("albumTiles").innerHTML =
-      "<p style='color:red'>albums.js not loaded</p>";
-  } else {
-    const container = document.getElementById("albumTiles");
+const container = document.getElementById("albumTiles");
 
-    albums.forEach(album => {
-      const tile = document.createElement("a");
-      tile.href = `album.html?album=${album.id}`;
-      tile.className = "album-tile";
-      tile.innerHTML = `
-        <img src="${album.tileImage}">
-        <div class="tile-overlay"><span>${album.title}</span></div>
-      `;
-      container.appendChild(tile);
-    });
-  }
+/* Load each album's album.js */
+albumIndex.forEach(albumId => {
+  const script = document.createElement("script");
+  script.src = `images/${albumId}/album.js`;
+  script.onload = () => addAlbum(albumId);
+  document.body.appendChild(script);
+});
+
+function addAlbum(albumId) {
+  const album = window.albumData;
+
+  const tile = document.createElement("a");
+  tile.href = `album.html?album=${albumId}`;
+  tile.className = "album-tile";
+
+  tile.innerHTML = `
+    <img src="images/${albumId}/1.jpg" alt="">
+    <div class="tile-overlay">
+      <span>${album.albumTitle}</span>
+    </div>
+  `;
+
+  container.appendChild(tile);
+}
 </script>
 
 </body>

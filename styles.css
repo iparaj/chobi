@@ -389,24 +389,28 @@
   }
 }
 /* ===============================
-   ALBUM TOP-RIGHT ICON (ELIA STYLE)
+   ALBUM HOME BUTTON
 ================================ */
-.album-top-icon {
+.album-home-btn {
   position: fixed;
-  top: 22px;
-  right: 26px;
-  z-index: 80;
+  top: 20px;
+  right: 24px;
+  z-index: 60;
 
-  font-size: 22px;
+  padding: 10px 16px;
+  background: rgba(0,0,0,0.6);
   color: white;
   text-decoration: none;
-  opacity: 0.75;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
 
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 4px;
+
+  transition: background 0.3s ease, opacity 0.3s ease;
 }
 
-.album-top-icon:hover {
-  opacity: 1;
-  transform: scale(1.1);
+.album-home-btn:hover {
+  background: rgba(0,0,0,0.85);
 }
 

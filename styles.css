@@ -339,3 +339,47 @@
   opacity: 0.9;
 }
 
+
+/* ===============================
+   VIEWER INTERACTIONS
+================================ */
+.viewer-image-wrapper {
+  position: relative;
+}
+
+.viewer-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.viewer-hover-text {
+  color: white;
+  text-align: center;
+}
+
+.viewer-image-wrapper:hover .viewer-hover {
+  opacity: 1;
+}
+
+.info-panel {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100vh;
+  background: rgba(0,0,0,0.9);
+  color: white;
+  padding: 20px;
+  transition: right 0.35s ease;
+}
+
+.info-panel.show {
+  right: 0;
+}
+

@@ -173,7 +173,6 @@
   background: rgba(0,0,0,0.35);
   opacity: 0;
   transition: opacity 0.3s ease;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -261,20 +260,6 @@
   opacity: 0.9;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-/* ===============================
-   MOBILE / TABLET
-================================ */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-
-  .viewer-hover {
-    display: none; /* disable hover overlay on touch devices */
-  }
-}
 /* ===============================
    VIEWER NAVIGATION ARROWS
 ================================ */
@@ -295,13 +280,22 @@
 }
 
 .nav-left {
-  left: 90px; /* after sidebar */
+  left: 90px;
 }
 
 .nav-right {
   right: 30px;
 }
-=======
->>>>>>> parent of 2877ab4 (r3)
-=======
->>>>>>> parent of 2877ab4 (r3)
+
+/* ===============================
+   MOBILE / TABLET
+================================ */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .viewer-hover {
+    display: none; /* disable hover overlay on touch devices */
+  }
+}

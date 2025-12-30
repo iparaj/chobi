@@ -6,10 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 
+  <!-- Arrow navigation CSS -->
   <style>
-    /* ===============================
-       ARROW NAVIGATION
-    ================================ */
     .nav-arrow {
       position: fixed;
       top: 50%;
@@ -21,40 +19,29 @@
       opacity: 0.7;
       z-index: 50;
     }
-
-    .nav-arrow:hover {
-      opacity: 1;
-    }
-
-    .nav-left {
-      left: 90px;
-    }
-
-    .nav-right {
-      right: 30px;
-    }
+    .nav-arrow:hover { opacity: 1; }
+    .nav-left { left: 90px; }
+    .nav-right { right: 30px; }
   </style>
 </head>
 
 <body class="viewer">
 
-<!-- ===== CLOSE BUTTON ===== -->
-<button class="close-btn" title="Back to album" onclick="exitViewer()">✕</button>
+<!-- CLOSE -->
+<button class="close-btn" onclick="exitViewer()">✕</button>
 
-<!-- ===== LEFT SIDEBAR ===== -->
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <button title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
-  <button title="Slideshow" onclick="startSlideshow()">▶</button>
-  <button title="Photo Info" onclick="toggleInfo()">ℹ</button>
-  <button title="Share" onclick="shareImage()">🔗</button>
-  <button title="Comments" onclick="alert('Comments need backend')">💬</button>
+  <button onclick="toggleFullscreen()">⛶</button>
+  <button id="btnPlay" onclick="toggleSlideshow()">▶</button>
+  <button onclick="toggleInfo()">ℹ</button>
 </div>
 
-<!-- ===== ARROWS ===== -->
+<!-- ARROWS -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
-<!-- ===== MAIN IMAGE WITH HOVER TEXT ===== -->
+<!-- IMAGE -->
 <div class="viewer-main">
   <div class="viewer-image-wrapper">
     <img id="mainImage" alt="Viewing image">
@@ -67,141 +54,118 @@
   </div>
 </div>
 
-<!-- ===== INFO PANEL ===== -->
+<!-- INFO PANEL -->
 <div class="info-panel" id="infoPanel"></div>
 
 <script src="data/albums.js"></script>
 <script src="data/photoinfo.js"></script>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const albumId = params.get("album");
-  const imgName = params.get("img");
+/* ===============================
+   STATE
+================================ */
+let slideshowTimer = null;
+let playing = false;
 
-  const album = albums.find(a => a.id === albumId);
-  const images = album.images;
+const params = new URLSearchParams(window.location.search);
+const albumId = params.get("album");
+const imgName = params.get("img");
 
-  let currentIndex = images.indexOf(imgName);
-  if (currentIndex === -1) currentIndex = 0;
+const album = albums.find(a => a.id === albumId);
+const images = album.images;
 
-  const imgFile = images[currentIndex];
-  const imgPath = `images/${albumId}/${imgFile}`;
+let currentIndex = images.indexOf(imgName);
+if (currentIndex === -1) currentIndex = 0;
 
-  const mainImage = document.getElementById("mainImage");
-  mainImage.src = imgPath;
+/* ===============================
+   LOAD IMAGE (NO PAGE RELOAD)
+================================ */
+function loadImage(index) {
+  const imgFile = images[index];
+  document.getElementById("mainImage").src =
+    `images/${albumId}/${imgFile}`;
 
-  /* ---- Hover text ---- */
   const info = photoInfo[`${albumId}/${imgFile}`] || {};
   document.getElementById("hoverTitle").textContent = info.title || "";
   document.getElementById("hoverSubtitle").textContent = info.location || "";
 
-  /* ---- Viewer info panel ---- */
-  if (info.title) {
-    document.getElementById("infoPanel").innerHTML = `
-      <h3>${info.title}</h3>
-      <p><b>Camera:</b> ${info.camera || ""}</p>
-      <p><b>Lens:</b> ${info.lens || ""}</p>
-      <p><b>Exposure:</b> ${info.exposure || ""}</p>
-      <p><b>Location:</b> ${info.location || ""}</p>
-      <p>${info.description || ""}</p>
-    `;
-  }
+  document.getElementById("infoPanel").innerHTML = info.title ? `
+    <h3>${info.title}</h3>
+    <p><b>Camera:</b> ${info.camera || ""}</p>
+    <p><b>Lens:</b> ${info.lens || ""}</p>
+    <p><b>Exposure:</b> ${info.exposure || ""}</p>
+    <p><b>Location:</b> ${info.location || ""}</p>
+    <p>${info.description || ""}</p>
+  ` : "";
 
-  /* ---- Navigation ---- */
-  function goTo(index) {
-    window.location.href =
-      `viewer.html?album=${albumId}&img=${images[index]}`;
-  }
+  history.replaceState(null, "",
+    `viewer.html?album=${albumId}&img=${imgFile}`);
+}
 
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % images.length;
-    goTo(currentIndex);
-  }
+loadImage(currentIndex);
 
-  function prevImage() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    goTo(currentIndex);
-  }
+/* ===============================
+   NAVIGATION
+================================ */
+function nextImage() {
+  currentIndex = (currentIndex + 1) % images.length;
+  loadImage(currentIndex);
+}
 
-  function exitViewer() {
-    window.location.href = `album.html?album=${albumId}`;
-  }
+function prevImage() {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  loadImage(currentIndex);
+}
 
-  /* ---- Controls ---- */
-  function toggleInfo() {
-    document.getElementById("infoPanel").classList.toggle("show");
-  }
+function exitViewer() {
+  stopSlideshow();
+  window.location.href = `album.html?album=${albumId}`;
+}
 
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  }
+/* ===============================
+   SLIDESHOW
+================================ */
+function toggleSlideshow() {
+  playing ? stopSlideshow() : startSlideshow();
+}
 
-  function shareImage() {
-    navigator.clipboard.writeText(window.location.href);
-    alert("Link copied");
-  }
+function startSlideshow() {
+  playing = true;
+  document.getElementById("btnPlay").textContent = "⏸";
+  slideshowTimer = setInterval(nextImage, 3000);
+}
 
-  function startSlideshow() {
-    alert("Slideshow can be added next");
-  }
+function stopSlideshow() {
+  playing = false;
+  document.getElementById("btnPlay").textContent = "▶";
+  clearInterval(slideshowTimer);
+}
 
-  /* ---- Keyboard ---- */
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") nextImage();
-    if (e.key === "ArrowLeft") prevImage();
-    if (e.key === "Escape") exitViewer();
-  });
+/* ===============================
+   INFO PANEL
+================================ */
+function toggleInfo() {
+  document.getElementById("infoPanel").classList.toggle("show");
+}
+
+/* ===============================
+   UTIL
+================================ */
+function toggleFullscreen() {
+  document.documentElement.requestFullscreen();
+}
+
+/* ===============================
+   KEYBOARD
+================================ */
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") nextImage();
+  if (e.key === "ArrowLeft") prevImage();
+  if (e.key === " ") toggleSlideshow();
+  if (e.key === "i") toggleInfo();
+  if (e.key === "Escape") exitViewer();
+});
 </script>
 
 </body>
 </html>
-/* ===============================
-   VIEWER IMAGE HOVER TEXT
-================================ */
-
-.viewer-image-wrapper {
-  position: relative;
-}
-
-.viewer-hover {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.viewer-hover-text {
-  text-align: center;
-  color: white;
-  transform: translateY(12px);
-  transition: transform 0.3s ease;
-}
-
-.viewer-hover-text h3 {
-  font-size: 1.4rem;
-  margin-bottom: 6px;
-  letter-spacing: 1px;
-}
-
-.viewer-hover-text p {
-  font-size: 1rem;
-  opacity: 0.85;
-}
-
-/* Hover interaction */
-.viewer-image-wrapper:hover .viewer-hover {
-  opacity: 1;
-}
-
-.viewer-image-wrapper:hover .viewer-hover-text {
-  transform: translateY(0);
-}

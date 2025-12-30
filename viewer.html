@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Navigation arrows -->
+  <!-- Arrow styles -->
   <style>
     .nav-arrow {
       position: fixed;
@@ -16,10 +16,8 @@
       color: white;
       cursor: pointer;
       user-select: none;
-      opacity: 0.7;
       z-index: 50;
     }
-    .nav-arrow:hover { opacity: 1; }
     .nav-left { left: 90px; }
     .nav-right { right: 30px; }
   </style>
@@ -27,26 +25,31 @@
 
 <body class="viewer">
 
-<!-- CLOSE -->
-<button class="close-btn" onclick="exitViewer()">✕</button>
+<!-- ===== UI WRAPPER (AUTO-HIDE) ===== -->
+<div class="viewer-ui" id="viewerUI">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <button onclick="toggleFullscreen()">⛶</button>
-  <button id="btnPlay" onclick="toggleSlideshow()">▶</button>
-  <button onclick="toggleInfo()">ℹ</button>
+  <!-- CLOSE -->
+  <button class="close-btn" onclick="exitViewer()">✕</button>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <button onclick="toggleFullscreen()">⛶</button>
+    <button id="btnPlay" onclick="toggleSlideshow()">▶</button>
+    <button onclick="toggleInfo()">ℹ</button>
+  </div>
+
+  <!-- ARROWS -->
+  <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
+  <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
+
 </div>
 
-<!-- ARROWS -->
-<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
-<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
-
-<!-- IMAGE -->
+<!-- ===== IMAGE ===== -->
 <div class="viewer-main">
   <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
 
-    <!-- TITLE / SUBTITLE (BOTTOM) -->
+    <!-- CAPTION -->
     <div class="viewer-caption" id="viewerCaption">
       <h3 id="captionTitle"></h3>
       <p id="captionSubtitle"></p>
@@ -66,7 +69,7 @@
 ================================ */
 let slideshowTimer = null;
 let playing = false;
-let captionTimer = null;
+let uiTimer = null;
 
 const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album");
@@ -157,19 +160,20 @@ function toggleFullscreen() {
 }
 
 /* ===============================
-   CAPTION ON MOUSE MOVE
+   AUTO-HIDE UI (IMPORTANT)
 ================================ */
-const wrapper = document.getElementById("imageWrapper");
-const caption = document.getElementById("viewerCaption");
+const ui = document.getElementById("viewerUI");
 
-wrapper.addEventListener("mousemove", () => {
-  caption.classList.add("show");
-
-  clearTimeout(captionTimer);
-  captionTimer = setTimeout(() => {
-    caption.classList.remove("show");
+function showUI() {
+  ui.classList.add("show");
+  clearTimeout(uiTimer);
+  uiTimer = setTimeout(() => {
+    ui.classList.remove("show");
   }, 2000);
-});
+}
+
+document.addEventListener("mousemove", showUI);
+showUI();
 
 /* ===============================
    KEYBOARD

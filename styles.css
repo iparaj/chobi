@@ -308,3 +308,16 @@
     height: 160px;
   }
 }
+/* ===============================
+   AUTO-HIDE VIEWER UI
+================================ */
+.viewer-ui {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.viewer-ui.show {
+  opacity: 1;
+  pointer-events: auto;
+}

@@ -9,9 +9,21 @@
 
 <body>
 
-<a href="index.html" style="margin:20px; display:inline-block;">← Back to Albums</a>
-<h2 id="albumTitle" style="text-align:center; margin-bottom:30px;"></h2>
+<!-- ===== ALBUM HERO ===== -->
+<section class="album-hero">
+  <img id="albumHeroImage" alt="Album hero">
 
+  <div class="album-hero-overlay">
+    <h2 id="albumTitle"></h2>
+
+    <div class="album-hero-actions">
+      <button onclick="startAlbumSlideshow()">▶ Slideshow</button>
+      <button onclick="shareAlbum()">🔗 Share</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMAGE GRID ===== -->
 <div class="grid" id="gallery"></div>
 
 <script src="data/albums.js"></script>
@@ -21,21 +33,36 @@
   const albumId = params.get("album");
 
   const album = albums.find(a => a.id === albumId);
+
+  /* ===== HERO IMAGE =====
+     Use the FIRST image as hero
+     (you can later add album.cover if you want)
+  */
+  document.getElementById("albumHeroImage").src =
+    `images/${albumId}/${album.images[0]}`;
+
   document.getElementById("albumTitle").textContent = album.title;
 
+  /* ===== GRID ===== */
   const gallery = document.getElementById("gallery");
 
   album.images.forEach(img => {
     const link = document.createElement("a");
     link.href = `viewer.html?album=${albumId}&img=${img}`;
-    link.className = "album-image";
-
-    link.innerHTML = `
-      <img src="images/${albumId}/${img}" alt="">
-    `;
-
+    link.innerHTML = `<img src="images/${albumId}/${img}" alt="">`;
     gallery.appendChild(link);
   });
+
+  /* ===== ACTIONS ===== */
+  function startAlbumSlideshow() {
+    window.location.href =
+      `viewer.html?album=${albumId}&img=${album.images[0]}`;
+  }
+
+  function shareAlbum() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Album link copied");
+  }
 </script>
 
 </body>

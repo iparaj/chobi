@@ -31,10 +31,29 @@
     .nav-right {
       right: 30px;
     }
+
+    /* ===== Close Button ===== */
+    .close-btn {
+      position: fixed;
+      top: 18px;
+      right: 20px;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+      opacity: 0.7;
+      z-index: 30;
+    }
+
+    .close-btn:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 
 <body class="viewer">
+
+<!-- ===== CLOSE BUTTON ===== -->
+<div class="close-btn" title="Back to album" onclick="exitViewer()">✕</div>
 
 <!-- ===== LEFT SIDEBAR ===== -->
 <div class="sidebar">
@@ -70,12 +89,13 @@
   const images = album.images;
 
   let currentIndex = images.indexOf(imgName);
+  if (currentIndex === -1) currentIndex = 0;
 
-  const mainImage = document.getElementById("mainImage");
-  mainImage.src = `images/${albumId}/${imgName}`;
+  document.getElementById("mainImage").src =
+    `images/${albumId}/${images[currentIndex]}`;
 
   /* ---- Photo info ---- */
-  const key = `${albumId}/${imgName}`;
+  const key = `${albumId}/${images[currentIndex]}`;
   const info = photoInfo[key];
   if (info) {
     document.getElementById("infoPanel").innerHTML = `
@@ -90,8 +110,8 @@
 
   /* ---- Navigation ---- */
   function goTo(index) {
-    const img = images[index];
-    window.location.href = `viewer.html?album=${albumId}&img=${img}`;
+    window.location.href =
+      `viewer.html?album=${albumId}&img=${images[index]}`;
   }
 
   function nextImage() {
@@ -102,6 +122,10 @@
   function prevImage() {
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     goTo(currentIndex);
+  }
+
+  function exitViewer() {
+    window.location.href = `album.html?album=${albumId}`;
   }
 
   /* ---- Controls ---- */
@@ -126,11 +150,11 @@
     alert("Slideshow autoplay can be added next");
   }
 
-  /* ---- Keyboard support ---- */
+  /* ---- Keyboard ---- */
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") nextImage();
     if (e.key === "ArrowLeft") prevImage();
-    if (e.key === "Escape") window.history.back();
+    if (e.key === "Escape") exitViewer();
   });
 </script>
 

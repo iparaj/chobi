@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Arrow navigation CSS -->
+  <!-- Navigation arrows -->
   <style>
     .nav-arrow {
       position: fixed;
@@ -43,13 +43,13 @@
 
 <!-- IMAGE -->
 <div class="viewer-main">
-  <div class="viewer-image-wrapper">
+  <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
-    <div class="viewer-hover">
-      <div class="viewer-hover-text">
-        <h3 id="hoverTitle"></h3>
-        <p id="hoverSubtitle"></p>
-      </div>
+
+    <!-- TITLE / SUBTITLE (BOTTOM) -->
+    <div class="viewer-caption" id="viewerCaption">
+      <h3 id="captionTitle"></h3>
+      <p id="captionSubtitle"></p>
     </div>
   </div>
 </div>
@@ -66,6 +66,7 @@
 ================================ */
 let slideshowTimer = null;
 let playing = false;
+let captionTimer = null;
 
 const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album");
@@ -78,7 +79,7 @@ let currentIndex = images.indexOf(imgName);
 if (currentIndex === -1) currentIndex = 0;
 
 /* ===============================
-   LOAD IMAGE (NO PAGE RELOAD)
+   LOAD IMAGE
 ================================ */
 function loadImage(index) {
   const imgFile = images[index];
@@ -86,8 +87,8 @@ function loadImage(index) {
     `images/${albumId}/${imgFile}`;
 
   const info = photoInfo[`${albumId}/${imgFile}`] || {};
-  document.getElementById("hoverTitle").textContent = info.title || "";
-  document.getElementById("hoverSubtitle").textContent = info.location || "";
+  document.getElementById("captionTitle").textContent = info.title || "";
+  document.getElementById("captionSubtitle").textContent = info.location || "";
 
   document.getElementById("infoPanel").innerHTML = info.title ? `
     <h3>${info.title}</h3>
@@ -149,11 +150,26 @@ function toggleInfo() {
 }
 
 /* ===============================
-   UTIL
+   FULLSCREEN
 ================================ */
 function toggleFullscreen() {
   document.documentElement.requestFullscreen();
 }
+
+/* ===============================
+   CAPTION ON MOUSE MOVE
+================================ */
+const wrapper = document.getElementById("imageWrapper");
+const caption = document.getElementById("viewerCaption");
+
+wrapper.addEventListener("mousemove", () => {
+  caption.classList.add("show");
+
+  clearTimeout(captionTimer);
+  captionTimer = setTimeout(() => {
+    caption.classList.remove("show");
+  }, 2000);
+});
 
 /* ===============================
    KEYBOARD

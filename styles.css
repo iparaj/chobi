@@ -102,6 +102,24 @@
 
 .grid a {
   display: block;
+  line-height: 0;           /* removes ghost spacing */
+  text-decoration: none;
+}
+
+/* Album image sizing */
+.grid img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.grid img:hover {
+  transform: scale(1.03);
+  opacity: 0.95;
 }
 
 /* ===============================
@@ -153,7 +171,7 @@
 }
 
 /* ===============================
-   VIEWER IMAGE + HOVER TEXT
+   VIEWER IMAGE
 ================================ */
 .viewer-image-wrapper {
   position: relative;
@@ -166,43 +184,34 @@
   border-radius: 6px;
 }
 
-/* Hover overlay */
-.viewer-hover {
+/* ===============================
+   VIEWER CAPTION (BOTTOM, JS-CONTROLLED)
+================================ */
+.viewer-caption {
   position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 18px;
+  color: white;
   opacity: 0;
   transition: opacity 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  pointer-events: none;
 }
 
-.viewer-hover-text {
-  text-align: center;
-  color: white;
-  transform: translateY(12px);
-  transition: transform 0.3s ease;
-}
-
-.viewer-hover-text h3 {
-  font-size: 1.4rem;
-  margin-bottom: 6px;
-  letter-spacing: 1px;
-}
-
-.viewer-hover-text p {
-  font-size: 1rem;
-  opacity: 0.85;
-}
-
-/* Hover activation */
-.viewer-image-wrapper:hover .viewer-hover {
+.viewer-caption.show {
   opacity: 1;
 }
 
-.viewer-image-wrapper:hover .viewer-hover-text {
-  transform: translateY(0);
+.viewer-caption h3 {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+.viewer-caption p {
+  font-size: 0.95rem;
+  opacity: 0.85;
 }
 
 /* ===============================
@@ -295,21 +304,7 @@
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 
-  .viewer-hover {
-    display: none; /* disable hover overlay on touch devices */
+  .grid img {
+    height: 160px;
   }
-}
-/* Album grid image sizing (IMPORTANT) */
-.grid img {
-  width: 100%;
-  height: 220px;        /* Controls album image size */
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.grid img:hover {
-  transform: scale(1.03);
-  opacity: 0.95;
 }

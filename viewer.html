@@ -9,17 +9,21 @@
 
 <body class="viewer">
 
+<!-- CLOSE -->
 <button class="close-btn" onclick="exitViewer()">✕</button>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
   <button onclick="toggleFullscreen()">⛶</button>
   <button id="btnPlay" onclick="toggleSlideshow()">▶</button>
   <button onclick="toggleInfo()">ℹ</button>
 </div>
 
+<!-- NAV ARROWS -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
+<!-- IMAGE -->
 <div class="viewer-main">
   <div class="viewer-image-wrapper">
     <img id="mainImage">
@@ -32,6 +36,7 @@
   </div>
 </div>
 
+<!-- INFO PANEL -->
 <div class="info-panel" id="infoPanel"></div>
 
 <script src="data/albums.js"></script>
@@ -55,7 +60,7 @@ let currentIndex = images.indexOf(imgName);
 if (currentIndex === -1) currentIndex = 0;
 
 /* ===============================
-   LOAD IMAGE (NO PAGE RELOAD)
+   LOAD IMAGE
 ================================ */
 function loadImage(index) {
   const imgFile = images[index];
@@ -63,7 +68,6 @@ function loadImage(index) {
     `images/${albumId}/${imgFile}`;
 
   const info = photoInfo[`${albumId}/${imgFile}`] || {};
-
   document.getElementById("hoverTitle").textContent = info.title || "";
   document.getElementById("hoverSubtitle").textContent = info.location || "";
 
@@ -101,7 +105,7 @@ function exitViewer() {
 }
 
 /* ===============================
-   SLIDESHOW (WORKING)
+   SLIDESHOW
 ================================ */
 function toggleSlideshow() {
   playing ? stopSlideshow() : startSlideshow();

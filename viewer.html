@@ -29,10 +29,17 @@
 <body class="viewer">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- CLOSE -->
 <button class="close-btn" onclick="exitViewer()">✕</button>
 
 <!-- SIDEBAR -->
+=======
+<!-- ===== CLOSE ===== -->
+<button class="close-btn" title="Back to album" onclick="exitViewer()">✕</button>
+
+<!-- ===== LEFT SIDEBAR ===== -->
+>>>>>>> parent of 2877ab4 (r3)
 =======
 <!-- ===== CLOSE ===== -->
 <button class="close-btn" title="Back to album" onclick="exitViewer()">✕</button>
@@ -48,11 +55,19 @@
 </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- NAV ARROWS -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
 <!-- IMAGE -->
+=======
+<!-- ===== ARROWS ===== -->
+<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
+<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
+
+<!-- ===== IMAGE + HOVER TEXT ===== -->
+>>>>>>> parent of 2877ab4 (r3)
 =======
 <!-- ===== ARROWS ===== -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
@@ -73,7 +88,11 @@
 </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- INFO PANEL -->
+=======
+<!-- ===== INFO PANEL ===== -->
+>>>>>>> parent of 2877ab4 (r3)
 =======
 <!-- ===== INFO PANEL ===== -->
 >>>>>>> parent of 2877ab4 (r3)
@@ -99,6 +118,7 @@
   let currentIndex = images.indexOf(imgName);
   if (currentIndex === -1) currentIndex = 0;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 /* ===============================
    LOAD IMAGE
@@ -135,6 +155,30 @@ function loadImage(index) {
   }
 >>>>>>> parent of 2877ab4 (r3)
 
+=======
+  /* ===============================
+     LOAD IMAGE
+  ================================ */
+  function loadImage(index) {
+    const imgFile = images[index];
+    const imgPath = `images/${albumId}/${imgFile}`;
+    document.getElementById("mainImage").src = imgPath;
+
+    const info = photoInfo[`${albumId}/${imgFile}`] || {};
+    document.getElementById("hoverTitle").textContent = info.title || "";
+    document.getElementById("hoverSubtitle").textContent = info.location || "";
+
+    document.getElementById("infoPanel").innerHTML = info.title ? `
+      <h3>${info.title}</h3>
+      <p><b>Camera:</b> ${info.camera || ""}</p>
+      <p><b>Lens:</b> ${info.lens || ""}</p>
+      <p><b>Exposure:</b> ${info.exposure || ""}</p>
+      <p><b>Location:</b> ${info.location || ""}</p>
+      <p>${info.description || ""}</p>
+    ` : "";
+  }
+
+>>>>>>> parent of 2877ab4 (r3)
   loadImage(currentIndex);
 
   /* ===============================
@@ -152,6 +196,7 @@ function loadImage(index) {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* ===============================
    SLIDESHOW
 ================================ */
@@ -159,11 +204,16 @@ function toggleSlideshow() {
   playing ? stopSlideshow() : startSlideshow();
 }
 =======
+=======
+>>>>>>> parent of 2877ab4 (r3)
   function prevImage() {
     stopSlideshow();
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     goTo(currentIndex);
   }
+<<<<<<< HEAD
+>>>>>>> parent of 2877ab4 (r3)
+=======
 >>>>>>> parent of 2877ab4 (r3)
 
   function exitViewer() {

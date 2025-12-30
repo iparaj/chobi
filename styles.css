@@ -109,7 +109,7 @@
 /* Album image sizing */
 .grid img {
   width: 100%;
-  height: 220px;
+  height: 280px;
   object-fit: cover;
   border-radius: 6px;
   display: block;

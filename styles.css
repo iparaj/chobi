@@ -389,28 +389,3 @@
   }
 }
 
-/* ===============================
-   SLIDESHOW START OVERLAY
-================================ */
-.slideshow-start {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.slideshow-start button {
-  font-size: 1.4rem;
-  padding: 16px 30px;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  border: 1px solid white;
-  cursor: pointer;
-}
-
-.slideshow-start button:hover {
-  background: rgba(255,255,255,0.25);
-}

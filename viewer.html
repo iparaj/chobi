@@ -45,10 +45,6 @@
 </div>
 
 <!-- ===== IMAGE ===== -->
- <!-- SLIDESHOW START OVERLAY -->
-<div class="slideshow-start" id="slideshowStart">
-  <button onclick="confirmStartSlideshow()">▶ Start Slideshow</button>
-</div>
 <div class="viewer-main">
   <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
@@ -112,9 +108,7 @@ function loadImage(index) {
 }
 
 loadImage(currentIndex);
-if (autoSlideshow) {
-  startSlideshow();
-}
+
 
 /* ===============================
    NAVIGATION

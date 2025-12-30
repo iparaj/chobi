@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Viewer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="viewer">
+
+<div class="sidebar">
+  <button onclick="toggleFullscreen()">⛶</button>
+  <button onclick="startSlideshow()">▶</button>
+  <button onclick="toggleInfo()">ℹ</button>
+  <button onclick="shareImage()">🔗</button>
+  <button onclick="alert('Comments need backend')">💬</button>
+</div>
+
+<div class="viewer-main">
+  <img id="mainImage">
+</div>
+
+<div class="info-panel" id="infoPanel"></div>
+
+<script src="data/photoinfo.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const album = params.get("album");
+  const img = params.get("img");
+
+  const key = `${album}/${img}`;
+  const imagePath = `images/${album}/${img}`;
+
+  document.getElementById("mainImage").src = imagePath;
+
+  const info = photoInfo[key];
+  if (info) {
+    document.getElementById("infoPanel").innerHTML = `
+      <h3>${info.title}</h3>
+      <p><b>Camera:</b> ${info.camera}</p>
+      <p><b>Lens:</b> ${info.lens}</p>
+      <p><b>Exposure:</b> ${info.exposure}</p>
+      <p><b>Location:</b> ${info.location}</p>
+      <p>${info.description}</p>
+    `;
+  }
+
+  function toggleInfo() {
+    document.getElementById("infoPanel").classList.toggle("show");
+  }
+
+  function toggleFullscreen() {
+    document.documentElement.requestFullscreen();
+  }
+
+  function shareImage() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied!");
+  }
+
+  function startSlideshow() {
+    alert("Slideshow can iterate album images (next step)");
+  }
+</script>
+
+</body>
+</html>

@@ -1,48 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name | Portfolio</title>
-
-    <link rel="stylesheet" href="styles.css">
+  <title>Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="light">
+<body>
 
-<!-- ===== Theme Toggle ===== -->
-<button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+<h1 class="page-title">Portfolio</h1>
 
-<!-- ===== Hero Section ===== -->
-<header class="hero">
-    <h1>Your Name</h1>
-    <p>Photographer · Researcher · Creator</p>
-</header>
+<div class="album-tiles" id="albumTiles"></div>
 
-<!-- ===== Gallery ===== -->
-<main class="gallery">
+<script src="data/albums.js"></script>
+<script>
+  const container = document.getElementById("albumTiles");
 
-    <!-- Album A -->
-    <section class="album">
-        <h2>Album A</h2>
-        <div class="grid">
-            <img src="images/album-a/a1.jpg" alt="Album A image 1">
-            <img src="images/album-a/a2.jpg" alt="Album A image 2">
-            <img src="images/album-a/a3.jpg" alt="Album A image 3">
-        </div>
-    </section>
+  albums.forEach(album => {
+    const tile = document.createElement("a");
+    tile.href = `album.html?album=${album.id}`;
+    tile.className = "album-tile";
 
-    <!-- Album B -->
-    <section class="album">
-        <h2>Album B</h2>
-        <div class="grid">
-            <img src="images/album-b/b1.jpg" alt="Album B image 1">
-            <img src="images/album-b/b2.jpg" alt="Album B image 2">
-            <img src="images/album-b/b3.jpg" alt="Album B image 3">
-        </div>
-    </section>
+    tile.innerHTML = `
+      <img src="${album.cover}">
+      <span>${album.title}</span>
+    `;
+    container.appendChild(tile);
+  });
+</script>
 
-</main>
-
-<script src="script.js"></script>
 </body>
 </html>

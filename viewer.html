@@ -134,8 +134,14 @@ function toggleSlideshow() {
 }
 
 function startSlideshow() {
+  /* Enter fullscreen first */
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+
   playing = true;
   document.getElementById("btnPlay").textContent = "⏸";
+
   slideshowTimer = setInterval(nextImage, 3000);
 }
 

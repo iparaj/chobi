@@ -17,4 +17,10 @@ const albums = [
     tileImage: "images/album-b/b1.jpg",
     images: ["b1.jpg", "b2.jpg", "b3.jpg"]
   }
+    {
+    id: "album-c",
+    title: "Album B",
+    tileImage: "images/album-c/c1.jpg",
+    images: ["c1.jpg", "c2.jpg", "c3.jpg"]
+  }
 ];

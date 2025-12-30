@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* ===== Arrow Navigation ===== */
+    /* ===============================
+       NAVIGATION ARROWS
+    ================================ */
     .nav-arrow {
       position: fixed;
       top: 50%;
@@ -16,8 +18,8 @@
       color: white;
       cursor: pointer;
       user-select: none;
-      opacity: 0.6;
-      z-index: 20;
+      opacity: 0.7;
+      z-index: 50;
     }
 
     .nav-arrow:hover {
@@ -31,29 +33,13 @@
     .nav-right {
       right: 30px;
     }
-
-    /* ===== Close Button ===== */
-    .close-btn {
-      position: fixed;
-      top: 18px;
-      right: 20px;
-      font-size: 28px;
-      color: white;
-      cursor: pointer;
-      opacity: 0.7;
-      z-index: 30;
-    }
-
-    .close-btn:hover {
-      opacity: 1;
-    }
   </style>
 </head>
 
 <body class="viewer">
 
-<!-- ===== CLOSE BUTTON ===== -->
-<div class="close-btn" title="Back to album" onclick="exitViewer()">✕</div>
+<!-- ===== CLOSE BUTTON (ALWAYS VISIBLE) ===== -->
+<button class="close-btn" title="Back to album" onclick="exitViewer()">✕</button>
 
 <!-- ===== LEFT SIDEBAR ===== -->
 <div class="sidebar">
@@ -64,7 +50,7 @@
   <button title="Comments" onclick="alert('Comments need backend')">💬</button>
 </div>
 
-<!-- ===== ARROWS ===== -->
+<!-- ===== ARROW NAVIGATION ===== -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
@@ -73,7 +59,7 @@
   <img id="mainImage" alt="Viewing image">
 </div>
 
-<!-- ===== INFO PANEL ===== -->
+<!-- ===== PHOTO INFO PANEL ===== -->
 <div class="info-panel" id="infoPanel"></div>
 
 <!-- ===== DATA ===== -->
@@ -81,6 +67,9 @@
 <script src="data/photoinfo.js"></script>
 
 <script>
+  /* ===============================
+     URL PARAMS
+  ================================ */
   const params = new URLSearchParams(window.location.search);
   const albumId = params.get("album");
   const imgName = params.get("img");
@@ -91,12 +80,15 @@
   let currentIndex = images.indexOf(imgName);
   if (currentIndex === -1) currentIndex = 0;
 
-  document.getElementById("mainImage").src =
-    `images/${albumId}/${images[currentIndex]}`;
+  const mainImage = document.getElementById("mainImage");
+  mainImage.src = `images/${albumId}/${images[currentIndex]}`;
 
-  /* ---- Photo info ---- */
+  /* ===============================
+     PHOTO INFO
+  ================================ */
   const key = `${albumId}/${images[currentIndex]}`;
   const info = photoInfo[key];
+
   if (info) {
     document.getElementById("infoPanel").innerHTML = `
       <h3>${info.title}</h3>
@@ -108,7 +100,9 @@
     `;
   }
 
-  /* ---- Navigation ---- */
+  /* ===============================
+     NAVIGATION
+  ================================ */
   function goTo(index) {
     window.location.href =
       `viewer.html?album=${albumId}&img=${images[index]}`;
@@ -128,7 +122,9 @@
     window.location.href = `album.html?album=${albumId}`;
   }
 
-  /* ---- Controls ---- */
+  /* ===============================
+     CONTROLS
+  ================================ */
   function toggleInfo() {
     document.getElementById("infoPanel").classList.toggle("show");
   }
@@ -150,7 +146,9 @@
     alert("Slideshow autoplay can be added next");
   }
 
-  /* ---- Keyboard ---- */
+  /* ===============================
+     KEYBOARD SUPPORT
+  ================================ */
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") nextImage();
     if (e.key === "ArrowLeft") prevImage();

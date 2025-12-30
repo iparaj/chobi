@@ -5,11 +5,38 @@
   <title>Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ===== Arrow Navigation ===== */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 48px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0.6;
+      z-index: 20;
+    }
+
+    .nav-arrow:hover {
+      opacity: 1;
+    }
+
+    .nav-left {
+      left: 90px; /* after sidebar */
+    }
+
+    .nav-right {
+      right: 30px;
+    }
+  </style>
 </head>
 
 <body class="viewer">
 
-<!-- ===== LEFT SIDEBAR CONTROLS ===== -->
+<!-- ===== LEFT SIDEBAR ===== -->
 <div class="sidebar">
   <button title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
   <button title="Slideshow" onclick="startSlideshow()">▶</button>
@@ -18,28 +45,37 @@
   <button title="Comments" onclick="alert('Comments need backend')">💬</button>
 </div>
 
-<!-- ===== MAIN IMAGE AREA ===== -->
+<!-- ===== ARROWS ===== -->
+<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
+<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
+
+<!-- ===== MAIN IMAGE ===== -->
 <div class="viewer-main">
   <img id="mainImage" alt="Viewing image">
 </div>
 
-<!-- ===== PHOTO INFO PANEL ===== -->
+<!-- ===== INFO PANEL ===== -->
 <div class="info-panel" id="infoPanel"></div>
 
-<!-- ===== DATA + LOGIC ===== -->
+<!-- ===== DATA ===== -->
+<script src="data/albums.js"></script>
 <script src="data/photoinfo.js"></script>
+
 <script>
   const params = new URLSearchParams(window.location.search);
-  const album = params.get("album");
-  const img = params.get("img");
+  const albumId = params.get("album");
+  const imgName = params.get("img");
 
-  const imagePath = `images/${album}/${img}`;
-  const key = `${album}/${img}`;
+  const album = albums.find(a => a.id === albumId);
+  const images = album.images;
+
+  let currentIndex = images.indexOf(imgName);
 
   const mainImage = document.getElementById("mainImage");
-  mainImage.src = imagePath;
+  mainImage.src = `images/${albumId}/${imgName}`;
 
   /* ---- Photo info ---- */
+  const key = `${albumId}/${imgName}`;
   const info = photoInfo[key];
   if (info) {
     document.getElementById("infoPanel").innerHTML = `
@@ -50,6 +86,22 @@
       <p><b>Location:</b> ${info.location}</p>
       <p>${info.description}</p>
     `;
+  }
+
+  /* ---- Navigation ---- */
+  function goTo(index) {
+    const img = images[index];
+    window.location.href = `viewer.html?album=${albumId}&img=${img}`;
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    goTo(currentIndex);
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    goTo(currentIndex);
   }
 
   /* ---- Controls ---- */
@@ -71,8 +123,15 @@
   }
 
   function startSlideshow() {
-    alert("Slideshow feature can be added next");
+    alert("Slideshow autoplay can be added next");
   }
+
+  /* ---- Keyboard support ---- */
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") nextImage();
+    if (e.key === "ArrowLeft") prevImage();
+    if (e.key === "Escape") window.history.back();
+  });
 </script>
 
 </body>

@@ -105,84 +105,6 @@
 }
 
 /* ===============================
-   HOVER TITLE + SUBTITLE (ALBUM)
-================================ */
-.grid-item {
-  display: block;
-}
-
-.image-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 6px;
-}
-
-.image-wrapper img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-/* Overlay */
-.hover-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Text */
-.hover-text {
-  text-align: center;
-  color: white;
-  transform: translateY(12px);
-  transition: transform 0.3s ease;
-}
-
-.hover-text h3 {
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-  letter-spacing: 1px;
-}
-
-.hover-text p {
-  font-size: 0.9rem;
-  opacity: 0.85;
-}
-
-/* Hover interaction */
-.grid-item:hover .hover-overlay {
-  opacity: 1;
-}
-
-.grid-item:hover .hover-text {
-  transform: translateY(0);
-}
-
-.grid-item:hover img {
-  transform: scale(1.05);
-}
-
-/* ===============================
-   MOBILE / TABLET
-================================ */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-
-  .image-wrapper img {
-    height: 160px;
-  }
-}
-
-/* ===============================
    IMAGE VIEWER
 ================================ */
 .viewer {
@@ -192,6 +114,7 @@
   overflow: hidden;
 }
 
+/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -204,7 +127,7 @@
   align-items: center;
   padding-top: 20px;
   gap: 18px;
-  z-index: 10;
+  z-index: 20;
 }
 
 .sidebar button {
@@ -220,6 +143,7 @@
   opacity: 1;
 }
 
+/* Main image area */
 .viewer-main {
   margin-left: 60px;
   height: 100vh;
@@ -228,11 +152,58 @@
   align-items: center;
 }
 
-.viewer-main img {
+/* ===============================
+   VIEWER IMAGE + HOVER TEXT
+================================ */
+.viewer-image-wrapper {
+  position: relative;
+}
+
+.viewer-image-wrapper img {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
   border-radius: 6px;
+}
+
+/* Hover overlay */
+.viewer-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.viewer-hover-text {
+  text-align: center;
+  color: white;
+  transform: translateY(12px);
+  transition: transform 0.3s ease;
+}
+
+.viewer-hover-text h3 {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.viewer-hover-text p {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* Hover activation */
+.viewer-image-wrapper:hover .viewer-hover {
+  opacity: 1;
+}
+
+.viewer-image-wrapper:hover .viewer-hover-text {
+  transform: translateY(0);
 }
 
 /* ===============================
@@ -260,53 +231,6 @@
 }
 
 /* ===============================
-   VIEWER IMAGE HOVER TEXT
-================================ */
-
-.viewer-image-wrapper {
-  position: relative;
-}
-
-.viewer-hover {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.viewer-hover-text {
-  text-align: center;
-  color: white;
-  transform: translateY(12px);
-  transition: transform 0.3s ease;
-}
-
-.viewer-hover-text h3 {
-  font-size: 1.4rem;
-  margin-bottom: 6px;
-  letter-spacing: 1px;
-}
-
-.viewer-hover-text p {
-  font-size: 1rem;
-  opacity: 0.85;
-}
-
-/* Hover interaction */
-.viewer-image-wrapper:hover .viewer-hover {
-  opacity: 1;
-}
-
-.viewer-image-wrapper:hover .viewer-hover-text {
-  transform: translateY(0);
-}
-
-/* ===============================
    INFO PANEL (VIEWER)
 ================================ */
 .info-panel {
@@ -315,13 +239,11 @@
   right: -320px;
   width: 320px;
   height: 100vh;
-
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0,0,0,0.9);
   color: white;
   padding: 20px;
-
   transition: right 0.35s ease;
-  z-index: 40;
+  z-index: 30;
   overflow-y: auto;
 }
 
@@ -339,47 +261,15 @@
   opacity: 0.9;
 }
 
-
 /* ===============================
-   VIEWER INTERACTIONS
+   MOBILE / TABLET
 ================================ */
-.viewer-image-wrapper {
-  position: relative;
-}
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
 
-.viewer-hover {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .viewer-hover {
+    display: none; /* disable hover overlay on touch devices */
+  }
 }
-
-.viewer-hover-text {
-  color: white;
-  text-align: center;
-}
-
-.viewer-image-wrapper:hover .viewer-hover {
-  opacity: 1;
-}
-
-.info-panel {
-  position: fixed;
-  top: 0;
-  right: -320px;
-  width: 320px;
-  height: 100vh;
-  background: rgba(0,0,0,0.9);
-  color: white;
-  padding: 20px;
-  transition: right 0.35s ease;
-}
-
-.info-panel.show {
-  right: 0;
-}
-

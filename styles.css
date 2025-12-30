@@ -188,3 +188,32 @@
   object-fit: contain;          /* no cropping */
   border-radius: 6px;
 }
+
+/* ===============================
+   VIEWER CLOSE BUTTON
+================================ */
+.close-btn {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  border: none;
+
+  font-size: 22px;
+  line-height: 36px;
+  text-align: center;
+
+  cursor: pointer;
+  z-index: 9999; /* ALWAYS ON TOP */
+}
+
+.close-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+

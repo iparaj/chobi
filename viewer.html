@@ -14,36 +14,37 @@
 
 <!-- LEFT SIDEBAR -->
 <div class="sidebar">
-  <button onclick="startSlideshow()">▶</button>
-  <button onclick="toggleInfo()">ℹ</button>
+  <button id="slideshowBtn" onclick="toggleSlideshow()">▶</button>
 </div>
 
 <!-- ARROWS -->
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
-<!-- IMAGE -->
+<!-- MAIN IMAGE -->
 <div class="viewer-main">
-  <img id="mainImage">
+  <img id="mainImage" alt="Viewing image">
 </div>
-
-<!-- INFO PANEL -->
-<div class="info-panel" id="infoPanel"></div>
 
 <script>
 /* ===============================
-   BASIC DATA (NO DYNAMIC LOAD)
+   BASIC CONFIG
 ================================ */
-const albumId = new URLSearchParams(window.location.search).get("album") || "album-a";
-let currentIndex = parseInt(new URLSearchParams(window.location.search).get("img")) || 1;
+const params = new URLSearchParams(window.location.search);
+const albumId = params.get("album") || "album-a";
+let currentIndex = parseInt(params.get("img"), 10) || 1;
 
-// CHANGE THIS COUNT TO MATCH YOUR ALBUM
+/* 🔴 CHANGE THIS to number of images in album */
 const IMAGE_COUNT = 5;
 
+/* ===============================
+   STATE
+================================ */
 let slideshowTimer = null;
+let isPlaying = false;
 
 /* ===============================
-   LOAD IMAGE
+   IMAGE LOAD
 ================================ */
 function loadImage() {
   document.getElementById("mainImage").src =
@@ -68,32 +69,43 @@ function prevImage() {
 }
 
 /* ===============================
-   SLIDESHOW (THIS WILL WORK)
+   SLIDESHOW (PLAY / PAUSE)
 ================================ */
 function startSlideshow() {
-  stopSlideshow();
+  if (isPlaying) return;
+
+  isPlaying = true;
+  updatePlayButton();
+
   slideshowTimer = setInterval(nextImage, 3000);
 }
 
-function stopSlideshow() {
-  if (slideshowTimer) {
-    clearInterval(slideshowTimer);
-    slideshowTimer = null;
+function pauseSlideshow() {
+  isPlaying = false;
+  updatePlayButton();
+
+  clearInterval(slideshowTimer);
+  slideshowTimer = null;
+}
+
+function toggleSlideshow() {
+  if (isPlaying) {
+    pauseSlideshow();
+  } else {
+    startSlideshow();
   }
 }
 
-/* ===============================
-   INFO
-================================ */
-function toggleInfo() {
-  document.getElementById("infoPanel").classList.toggle("show");
+function updatePlayButton() {
+  const btn = document.getElementById("slideshowBtn");
+  btn.textContent = isPlaying ? "⏸" : "▶";
 }
 
 /* ===============================
    EXIT
 ================================ */
 function exitViewer() {
-  stopSlideshow();
+  pauseSlideshow();
   window.location.href = `album.html?album=${albumId}`;
 }
 

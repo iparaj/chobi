@@ -398,3 +398,40 @@
     padding-left: 0;
   }
 }
+
+/* ===============================
+   JUSTIFIED ALBUM GRID
+================================ */
+.justified-grid {
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+.justified-row {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.justified-row img {
+  height: 240px;          /* BASE ROW HEIGHT */
+  object-fit: cover;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.justified-row img:last-child {
+  margin-right: 0;
+}
+
+/* Responsive tuning */
+@media (max-width: 900px) {
+  .justified-row img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .justified-row img {
+    height: 160px;
+  }
+}

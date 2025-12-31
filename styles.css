@@ -162,12 +162,11 @@
 }
 
 /* Main image area */
-.viewer-main {
-  margin-left: 60px;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.viewer-main img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 /* ===============================

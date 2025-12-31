@@ -8,6 +8,144 @@
 }
 
 /* ===============================
+   HOMEPAGE HERO
+================================ */
+.hero {
+  position: relative;
+  height: 60vh;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+
+.hero-overlay h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+}
+
+.hero-overlay p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* ===============================
+   HOMEPAGE ALBUM TILES
+================================ */
+.album-section {
+  padding: 50px 40px;
+}
+
+.album-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.album-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.album-tile img {
+  width: 100%;
+  height: 200px;              /* REDUCED */
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.album-tile:hover img {
+  transform: scale(1.06);
+}
+
+.tile-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.35);
+}
+
+.tile-overlay span {
+  color: white;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+/* ===============================
+   ALBUM GRID
+================================ */
+.grid {
+  max-width: 1200px;          /* REDUCED */
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;                   /* TIGHTER */
+}
+
+.grid a {
+  display: block;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.grid img {
+  width: 100%;
+  height: 220px;              /* REDUCED */
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.grid img:hover {
+  transform: scale(1.03);
+  opacity: 0.95;
+}
+
+/* ===============================
+   RESPONSIVE GRID
+================================ */
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid img {
+    height: 180px;
+  }
+}
+
+/* ===============================
    VIEWER BASE
 ================================ */
 .viewer {
@@ -18,11 +156,11 @@
 }
 
 /* ===============================
-   CENTER IMAGE
+   CENTER IMAGE (SIDEBAR COMPENSATED)
 ================================ */
 .viewer-main {
   height: 100vh;
-  padding-left: 60px;      /* matches sidebar width */
+  padding-left: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,7 +256,6 @@
   border: none;
   font-size: 22px;
   line-height: 36px;
-  text-align: center;
   cursor: pointer;
   z-index: 40;
 }
@@ -137,7 +274,6 @@
   font-size: 48px;
   color: white;
   cursor: pointer;
-  user-select: none;
   opacity: 0.7;
   z-index: 30;
 }
@@ -175,16 +311,6 @@
   right: 0;
 }
 
-.info-panel h3 {
-  margin-bottom: 10px;
-}
-
-.info-panel p {
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  opacity: 0.9;
-}
-
 /* ===============================
    AUTO-HIDE UI
 ================================ */
@@ -200,10 +326,14 @@
 }
 
 /* ===============================
-   MOBILE SAFETY
+   MOBILE VIEWER SAFETY
 ================================ */
 @media (max-width: 768px) {
   .nav-arrow {
     display: none;
+  }
+
+  .viewer-main {
+    padding-left: 0;
   }
 }

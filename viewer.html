@@ -47,7 +47,7 @@ const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album") || "album-a";
 let currentIndex = parseInt(params.get("img"), 10) || 1;
 
-/* 🔴 CHANGE THIS */
+/* 🔴 SET THIS TO IMAGE COUNT */
 const IMAGE_COUNT = 5;
 
 /* ===============================
@@ -65,11 +65,9 @@ function loadImage() {
   document.getElementById("mainImage").src =
     `images/${albumId}/${currentIndex}.jpg`;
 
-  /* TEMP titles — replace with album.js later */
-  document.getElementById("captionTitle").textContent =
-    `Image ${currentIndex}`;
-  document.getElementById("captionSubtitle").textContent =
-    `Album ${albumId}`;
+  // Placeholder titles (replace with album.js later)
+  document.getElementById("captionTitle").textContent = `Image ${currentIndex}`;
+  document.getElementById("captionSubtitle").textContent = `Album ${albumId}`;
 }
 
 loadImage();
@@ -88,13 +86,25 @@ function prevImage() {
 }
 
 /* ===============================
-   SLIDESHOW
+   SLIDESHOW (FULLSCREEN FIRST)
 ================================ */
 function toggleSlideshow() {
-  isPlaying ? pauseSlideshow() : startSlideshow();
+  isPlaying ? pauseSlideshow() : startFullscreenSlideshow();
+}
+
+function startFullscreenSlideshow() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+      .then(startSlideshow)
+      .catch(startSlideshow); // fallback if fullscreen denied
+  } else {
+    startSlideshow();
+  }
 }
 
 function startSlideshow() {
+  if (isPlaying) return;
+
   isPlaying = true;
   updateSlideshowButton();
   slideshowTimer = setInterval(nextImage, 3000);
@@ -131,6 +141,9 @@ function toggleInfo() {
 ================================ */
 function exitViewer() {
   pauseSlideshow();
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
   window.location.href = `album.html?album=${albumId}`;
 }
 

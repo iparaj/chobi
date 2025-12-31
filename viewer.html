@@ -10,189 +10,92 @@
 <body class="viewer">
 
 <!-- CLOSE -->
-<button class="close-btn viewer-ui" onclick="exitViewer()">✕</button>
+<button class="close-btn" onclick="exitViewer()">✕</button>
 
 <!-- LEFT SIDEBAR -->
-<div class="sidebar viewer-ui">
-  <button onclick="toggleFullscreen()">⛶</button>
-  <button onclick="showSlideshowOverlay()">▶</button>
+<div class="sidebar">
+  <button onclick="startSlideshow()">▶</button>
   <button onclick="toggleInfo()">ℹ</button>
-  <button onclick="shareImage()">🔗</button>
 </div>
 
 <!-- ARROWS -->
-<div class="nav-arrow nav-left viewer-ui" onclick="prevImage()">❮</div>
-<div class="nav-arrow nav-right viewer-ui" onclick="nextImage()">❯</div>
+<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
+<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
-<!-- MAIN IMAGE -->
+<!-- IMAGE -->
 <div class="viewer-main">
-  <div class="viewer-image-wrapper" id="imageWrapper">
-    <img id="mainImage" alt="Viewing image">
-
-    <!-- CAPTION -->
-    <div class="viewer-caption" id="viewerCaption">
-      <h3 id="captionTitle"></h3>
-      <p id="captionSubtitle"></p>
-    </div>
-  </div>
+  <img id="mainImage">
 </div>
 
 <!-- INFO PANEL -->
 <div class="info-panel" id="infoPanel"></div>
 
-<!-- SLIDESHOW CONFIRM OVERLAY -->
-<div class="slideshow-start" id="slideshowStart">
-  <button onclick="confirmStartSlideshow()">▶ Start Slideshow</button>
-</div>
-
 <script>
 /* ===============================
-   PARAMS
+   BASIC DATA (NO DYNAMIC LOAD)
 ================================ */
-const params = new URLSearchParams(window.location.search);
-const albumId = params.get("album");
-let currentIndex = parseInt(params.get("img"), 10) || 1;
+const albumId = new URLSearchParams(window.location.search).get("album") || "album-a";
+let currentIndex = parseInt(new URLSearchParams(window.location.search).get("img")) || 1;
+
+// CHANGE THIS COUNT TO MATCH YOUR ALBUM
+const IMAGE_COUNT = 5;
 
 let slideshowTimer = null;
-let uiTimer = null;
-let captionTimer = null;
 
 /* ===============================
-   LOAD ALBUM DATA
+   LOAD IMAGE
 ================================ */
-const script = document.createElement("script");
-script.src = `images/${albumId}/album.js`;
-script.onload = initViewer;
-script.onerror = () => alert("album.js not found");
-document.body.appendChild(script);
-
-function initViewer() {
-  loadImage(currentIndex);
-  document.addEventListener("mousemove", showUI);
-}
-
-/* ===============================
-   IMAGE LOAD
-================================ */
-function loadImage(index) {
-  currentIndex = index;
+function loadImage() {
   document.getElementById("mainImage").src =
-    `images/${albumId}/${index}.jpg`;
-
-  const info = albumData.images[index] || {};
-  document.getElementById("captionTitle").textContent = info.title || "";
-  document.getElementById("captionSubtitle").textContent = info.location || "";
-
-  document.getElementById("infoPanel").innerHTML = `
-    <h3>${info.title || ""}</h3>
-    <p><b>Camera:</b> ${info.camera || ""}</p>
-    <p><b>Lens:</b> ${info.lens || ""}</p>
-    <p><b>Exposure:</b> ${info.exposure || ""}</p>
-    <p><b>Location:</b> ${info.location || ""}</p>
-    <p>${info.description || ""}</p>
-  `;
+    `images/${albumId}/${currentIndex}.jpg`;
 }
+
+loadImage();
 
 /* ===============================
    NAVIGATION
 ================================ */
 function nextImage() {
-  goTo(currentIndex >= albumData.count ? 1 : currentIndex + 1);
+  currentIndex++;
+  if (currentIndex > IMAGE_COUNT) currentIndex = 1;
+  loadImage();
 }
 
 function prevImage() {
-  goTo(currentIndex <= 1 ? albumData.count : currentIndex - 1);
-}
-
-function goTo(index) {
-  window.location.href =
-    `viewer.html?album=${albumId}&img=${index}`;
-}
-
-function exitViewer() {
-  stopSlideshow();
-  window.location.href = `album.html?album=${albumId}`;
+  currentIndex--;
+  if (currentIndex < 1) currentIndex = IMAGE_COUNT;
+  loadImage();
 }
 
 /* ===============================
-   CONTROLS
+   SLIDESHOW (THIS WILL WORK)
 ================================ */
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-}
-
-function toggleInfo() {
-  document.getElementById("infoPanel").classList.toggle("show");
-}
-
-function shareImage() {
-  navigator.clipboard.writeText(window.location.href);
-  alert("Link copied");
-}
-
-/* ===============================
-   SLIDESHOW (CORRECT FULLSCREEN FLOW)
-================================ */
-function showSlideshowOverlay() {
-  document.getElementById("slideshowStart").classList.add("show");
-}
-
-function confirmStartSlideshow() {
-  document.getElementById("slideshowStart").classList.remove("show");
-
-  // Fullscreen MUST be requested directly from click
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen()
-      .then(startSlideshow)
-      .catch(startSlideshow);
-  } else {
-    startSlideshow();
-  }
-}
-
 function startSlideshow() {
   stopSlideshow();
   slideshowTimer = setInterval(nextImage, 3000);
 }
 
 function stopSlideshow() {
-  clearInterval(slideshowTimer);
-  slideshowTimer = null;
+  if (slideshowTimer) {
+    clearInterval(slideshowTimer);
+    slideshowTimer = null;
+  }
 }
 
 /* ===============================
-   UI AUTO-HIDE
+   INFO
 ================================ */
-function showUI() {
-  document.querySelectorAll(".viewer-ui").forEach(el => {
-    el.classList.add("show");
-  });
-
-  clearTimeout(uiTimer);
-  uiTimer = setTimeout(() => {
-    document.querySelectorAll(".viewer-ui").forEach(el => {
-      el.classList.remove("show");
-    });
-  }, 2000);
+function toggleInfo() {
+  document.getElementById("infoPanel").classList.toggle("show");
 }
 
 /* ===============================
-   CAPTION AUTO-HIDE
+   EXIT
 ================================ */
-const caption = document.getElementById("viewerCaption");
-const wrapper = document.getElementById("imageWrapper");
-
-wrapper.addEventListener("mousemove", () => {
-  caption.classList.add("show");
-  clearTimeout(captionTimer);
-  captionTimer = setTimeout(() => {
-    caption.classList.remove("show");
-  }, 2000);
-});
+function exitViewer() {
+  stopSlideshow();
+  window.location.href = `album.html?album=${albumId}`;
+}
 
 /* ===============================
    KEYBOARD

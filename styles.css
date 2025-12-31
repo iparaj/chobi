@@ -94,7 +94,7 @@
 ================================ */
 .album-hero {
   position: relative;
-  height: 60vh;          /* 👈 THIS FIXES THE ISSUE */
+  height: 40vh;          /* 👈 THIS FIXES THE ISSUE */
   overflow: hidden;
 }
 
@@ -152,36 +152,31 @@
 /* ===============================
    ALBUM GRID
 ================================ */
-/* ===============================
-   ALBUM GRID (PROPORTIONAL / MASONRY)
-================================ */
 .grid {
   max-width: 1200px;
   margin: 40px auto;
-
-  column-count: 4;        /* desktop columns */
-  column-gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
 }
 
 .grid a {
-  display: inline-block;
-  width: 100%;
-  margin-bottom: 12px;
+  display: block;
   line-height: 0;
-  break-inside: avoid;
+  text-decoration: none;
 }
 
 .grid img {
   width: 100%;
-  height: auto;           /* 👈 KEY: keeps original aspect ratio */
-  object-fit: contain;    /* no cropping */
+  height: 220px;
+  object-fit: cover;
   border-radius: 6px;
-  display: block;
+  cursor: pointer;
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .grid img:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
   opacity: 0.95;
 }
 
@@ -190,19 +185,23 @@
 ================================ */
 @media (max-width: 1200px) {
   .grid {
-    column-count: 3;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 900px) {
   .grid {
-    column-count: 2;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .grid {
-    column-count: 1;
+    grid-template-columns: 1fr;
+  }
+
+  .grid img {
+    height: 180px;
   }
 }
 
@@ -396,42 +395,5 @@
 
   .viewer-main {
     padding-left: 0;
-  }
-}
-
-/* ===============================
-   JUSTIFIED ALBUM GRID
-================================ */
-.justified-grid {
-  max-width: 1200px;
-  margin: 40px auto;
-}
-
-.justified-row {
-  display: flex;
-  margin-bottom: 8px;
-}
-
-.justified-row img {
-  height: 240px;          /* BASE ROW HEIGHT */
-  object-fit: cover;
-  margin-right: 8px;
-  cursor: pointer;
-}
-
-.justified-row img:last-child {
-  margin-right: 0;
-}
-
-/* Responsive tuning */
-@media (max-width: 900px) {
-  .justified-row img {
-    height: 200px;
-  }
-}
-
-@media (max-width: 600px) {
-  .justified-row img {
-    height: 160px;
   }
 }

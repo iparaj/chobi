@@ -9,12 +9,13 @@
 
 <body class="album-page">
 
-<!-- HOME BUTTON -->
-<a href="index.html" class="album-home-btn">Home</a>
+<!-- TOP-RIGHT HOME ICON -->
+<a href="index.html" class="album-top-icon" title="Back to Home">⌂</a>
 
 <!-- ALBUM HERO -->
 <section class="album-hero">
   <img id="albumHeroImage" alt="Album hero">
+
   <div class="album-hero-overlay">
     <h2 id="albumTitle"></h2>
     <p id="albumSubtitle"></p>
@@ -26,10 +27,8 @@
   </div>
 </section>
 
-<!-- JUSTIFIED GRID -->
-<div class="justified-grid" id="gallery"></div>
-
-<script src="justified-grid.js"></script>
+<!-- IMAGE GRID -->
+<div class="grid" id="gallery"></div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -39,23 +38,37 @@
     document.body.innerHTML = "<p>Album not specified</p>";
   }
 
+  /* Dynamically load album metadata */
   const script = document.createElement("script");
   script.src = `images/${albumId}/album.js`;
-  script.onload = initAlbum;
+
+  script.onload = () => initAlbum();
+  script.onerror = () => {
+    document.body.innerHTML = "<p>Album not found</p>";
+  };
+
   document.body.appendChild(script);
 
   function initAlbum() {
+    /* HERO */
     document.getElementById("albumHeroImage").src =
       `images/${albumId}/1.jpg`;
 
-    document.getElementById("albumTitle").textContent = albumData.title;
-    document.getElementById("albumSubtitle").textContent = albumData.subtitle || "";
+    document.getElementById("albumTitle").textContent =
+      albumData.title;
 
-    buildJustifiedGrid(
-      document.getElementById("gallery"),
-      albumId,
-      albumData.count
-    );
+    document.getElementById("albumSubtitle").textContent =
+      albumData.subtitle || "";
+
+    /* GRID */
+    const gallery = document.getElementById("gallery");
+
+    for (let i = 1; i <= albumData.count; i++) {
+      const link = document.createElement("a");
+      link.href = `viewer.html?album=${albumId}&img=${i}`;
+      link.innerHTML = `<img src="images/${albumId}/${i}.jpg" alt="">`;
+      gallery.appendChild(link);
+    }
   }
 
   function startAlbumSlideshow() {

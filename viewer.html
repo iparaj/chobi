@@ -5,54 +5,36 @@
   <title>Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-
-  <!-- Arrow styles -->
-  <style>
-    .nav-arrow {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 48px;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-      z-index: 50;
-    }
-    .nav-left { left: 90px; }
-    .nav-right { right: 30px; }
-  </style>
 </head>
 
 <body class="viewer">
 
-<!-- ===== UI WRAPPER (AUTO-HIDE) ===== -->
-<div class="viewer-ui" id="viewerUI">
+<!-- CLOSE -->
+<button class="close-btn" onclick="exitViewer()">✕</button>
 
-  <!-- CLOSE -->
-  <button class="close-btn" onclick="exitViewer()">✕</button>
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <button onclick="toggleFullscreen()">⛶</button>
-    <button id="btnPlay" onclick="toggleSlideshow()">▶</button>
-    <button onclick="toggleInfo()">ℹ</button>
-  </div>
-
-  <!-- ARROWS -->
-  <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
-  <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
-
+<!-- LEFT SIDEBAR -->
+<div class="sidebar viewer-ui">
+  <button onclick="toggleFullscreen()">⛶</button>
+  <button onclick="startSlideshow()">▶</button>
+  <button onclick="toggleInfo()">ℹ</button>
+  <button onclick="shareImage()">🔗</button>
 </div>
 
-<!-- ===== IMAGE ===== -->
+<!-- ARROWS -->
+<div class="nav-arrow nav-left viewer-ui" onclick="prevImage()">❮</div>
+<div class="nav-arrow nav-right viewer-ui" onclick="nextImage()">❯</div>
+
+<!-- MAIN IMAGE -->
 <div class="viewer-main">
   <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
 
-    <!-- CAPTION -->
-    <div class="viewer-caption" id="viewerCaption">
-      <h3 id="captionTitle"></h3>
-      <p id="captionSubtitle"></p>
+    <!-- HOVER CAPTION -->
+    <div class="viewer-hover" id="viewerCaption">
+      <div class="viewer-hover-text">
+        <h3 id="captionTitle"></h3>
+        <p id="captionSubtitle"></p>
+      </div>
     </div>
   </div>
 </div>
@@ -60,159 +42,147 @@
 <!-- INFO PANEL -->
 <div class="info-panel" id="infoPanel"></div>
 
-<script src="data/albums.js"></script>
-<script src="data/photoinfo.js"></script>
+<!-- SLIDESHOW START OVERLAY -->
+<div class="slideshow-start" id="slideshowStart">
+  <button onclick="confirmStartSlideshow()">▶ Start Slideshow</button>
+</div>
 
 <script>
-/* ===============================
-   STATE
-================================ */
-let slideshowTimer = null;
-let playing = false;
-let uiTimer = null;
+  const params = new URLSearchParams(window.location.search);
+  const albumId = params.get("album");
+  const imgIndex = parseInt(params.get("img"), 10) || 1;
+  const autoSlideshow = params.get("slideshow") === "1";
 
-const params = new URLSearchParams(window.location.search);
-const albumId = params.get("album");
-const imgName = params.get("img");
-const autoSlideshow = params.get("slideshow") === "1";
+  let currentIndex = imgIndex;
+  let slideshowTimer = null;
+  let uiTimer = null;
 
-const album = albums.find(a => a.id === albumId);
-const images = album.images;
+  /* Load album metadata */
+  const script = document.createElement("script");
+  script.src = `images/${albumId}/album.js`;
+  script.onload = () => initViewer();
+  document.body.appendChild(script);
 
-let currentIndex = images.indexOf(imgName);
-if (currentIndex === -1) currentIndex = 0;
+  function initViewer() {
+    loadImage(currentIndex);
 
-/* ===============================
-   LOAD IMAGE
-================================ */
-function loadImage(index) {
-  const imgFile = images[index];
-  document.getElementById("mainImage").src =
-    `images/${albumId}/${imgFile}`;
+    if (!autoSlideshow) {
+      document.getElementById("slideshowStart").style.display = "none";
+    }
 
-  const info = photoInfo[`${albumId}/${imgFile}`] || {};
-  document.getElementById("captionTitle").textContent = info.title || "";
-  document.getElementById("captionSubtitle").textContent = info.location || "";
-
-  document.getElementById("infoPanel").innerHTML = info.title ? `
-    <h3>${info.title}</h3>
-    <p><b>Camera:</b> ${info.camera || ""}</p>
-    <p><b>Lens:</b> ${info.lens || ""}</p>
-    <p><b>Exposure:</b> ${info.exposure || ""}</p>
-    <p><b>Location:</b> ${info.location || ""}</p>
-    <p>${info.description || ""}</p>
-  ` : "";
-
-  history.replaceState(null, "",
-    `viewer.html?album=${albumId}&img=${imgFile}`);
-}
-
-loadImage(currentIndex);
-
-
-/* ===============================
-   NAVIGATION
-================================ */
-function nextImage() {
-  currentIndex = (currentIndex + 1) % images.length;
-  loadImage(currentIndex);
-}
-
-function prevImage() {
-  currentIndex = (currentIndex - 1 + images.length) % images.length;
-  loadImage(currentIndex);
-}
-
-function exitViewer() {
-  stopSlideshow();
-  window.location.href = `album.html?album=${albumId}`;
-}
-
-/* ===============================
-   SLIDESHOW
-================================ */
-function toggleSlideshow() {
-  playing ? stopSlideshow() : startSlideshow();
-}
-
-function startSlideshow() {
-  /* Enter fullscreen first */
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.addEventListener("mousemove", showUI);
   }
 
-  playing = true;
-  document.getElementById("btnPlay").textContent = "⏸";
+  function loadImage(index) {
+    currentIndex = index;
 
-  slideshowTimer = setInterval(nextImage, 3000);
-}
+    const imgPath = `images/${albumId}/${index}.jpg`;
+    document.getElementById("mainImage").src = imgPath;
 
-function stopSlideshow() {
-  playing = false;
-  document.getElementById("btnPlay").textContent = "▶";
-  clearInterval(slideshowTimer);
-}
+    const info = albumData.images[index] || {};
 
-/* ===============================
-   INFO PANEL
-================================ */
-function toggleInfo() {
-  document.getElementById("infoPanel").classList.toggle("show");
-}
+    document.getElementById("captionTitle").textContent =
+      info.title || "";
 
-/* ===============================
-   FULLSCREEN
-================================ */
-function toggleFullscreen() {
-  document.documentElement.requestFullscreen();
-}
+    document.getElementById("captionSubtitle").textContent =
+      info.location || "";
 
-/* ===============================
-   AUTO-HIDE UI (IMPORTANT)
-================================ */
-const ui = document.getElementById("viewerUI");
+    document.getElementById("infoPanel").innerHTML = `
+      <h3>${info.title || ""}</h3>
+      <p><b>Camera:</b> ${info.camera || ""}</p>
+      <p><b>Lens:</b> ${info.lens || ""}</p>
+      <p><b>Exposure:</b> ${info.exposure || ""}</p>
+      <p><b>Location:</b> ${info.location || ""}</p>
+      <p>${info.description || ""}</p>
+    `;
+  }
 
-function showUI() {
-  ui.classList.add("show");
-  clearTimeout(uiTimer);
-  uiTimer = setTimeout(() => {
-    ui.classList.remove("show");
-  }, 2000);
-}
+  /* NAVIGATION */
+  function nextImage() {
+    const next = currentIndex >= albumData.count ? 1 : currentIndex + 1;
+    goTo(next);
+  }
 
-document.addEventListener("mousemove", showUI);
-showUI();
+  function prevImage() {
+    const prev = currentIndex <= 1 ? albumData.count : currentIndex - 1;
+    goTo(prev);
+  }
 
-/* ===============================
-   KEYBOARD
-================================ */
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowRight") nextImage();
-  if (e.key === "ArrowLeft") prevImage();
-  if (e.key === " ") toggleSlideshow();
-  if (e.key === "i") toggleInfo();
-  if (e.key === "Escape") exitViewer();
-});
+  function goTo(index) {
+    window.location.href =
+      `viewer.html?album=${albumId}&img=${index}`;
+  }
 
-/* ===============================
-   CAPTION SHOW / AUTO-HIDE
-================================ */
-let captionTimer = null;
+  function exitViewer() {
+    window.location.href = `album.html?album=${albumId}`;
+  }
 
-const imageWrapper = document.getElementById("imageWrapper");
-const caption = document.getElementById("viewerCaption");
+  /* CONTROLS */
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
 
-function showCaption() {
-  caption.classList.add("show");
+  function toggleInfo() {
+    document.getElementById("infoPanel").classList.toggle("show");
+  }
 
-  clearTimeout(captionTimer);
-  captionTimer = setTimeout(() => {
-    caption.classList.remove("show");
-  }, 2000);
-}
+  function shareImage() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied");
+  }
 
-/* Show caption ONLY when mouse moves on image */
-imageWrapper.addEventListener("mousemove", showCaption);
+  /* SLIDESHOW */
+  function startSlideshow() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+
+    clearInterval(slideshowTimer);
+    slideshowTimer = setInterval(nextImage, 3000);
+  }
+
+  function confirmStartSlideshow() {
+    document.getElementById("slideshowStart").style.display = "none";
+    startSlideshow();
+  }
+
+  /* UI AUTO-HIDE */
+  function showUI() {
+    document.querySelectorAll(".viewer-ui").forEach(el => {
+      el.style.opacity = 1;
+    });
+
+    clearTimeout(uiTimer);
+    uiTimer = setTimeout(() => {
+      document.querySelectorAll(".viewer-ui").forEach(el => {
+        el.style.opacity = 0;
+      });
+    }, 2000);
+  }
+
+  /* CAPTION AUTO-HIDE */
+  let captionTimer = null;
+  const caption = document.getElementById("viewerCaption");
+  const imageWrapper = document.getElementById("imageWrapper");
+
+  imageWrapper.addEventListener("mousemove", () => {
+    caption.classList.add("show");
+    clearTimeout(captionTimer);
+    captionTimer = setTimeout(() => {
+      caption.classList.remove("show");
+    }, 2000);
+  });
+
+  /* KEYBOARD */
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") nextImage();
+    if (e.key === "ArrowLeft") prevImage();
+    if (e.key === "Escape") exitViewer();
+  });
 </script>
 
 </body>

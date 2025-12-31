@@ -3,42 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <title>iParaj</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
+<!-- ===============================
+     HERO SECTION
+================================ -->
 <header class="hero">
-  <img src="images/album-a/a1.jpg" id="heroImage">
+  <img id="heroImage" alt="Hero image">
   <div class="hero-overlay">
-    <h1>iParaj</h1>
-    <p>Welcome to my page</p>
+    <h1 id="heroTitle"></h1>
+    <p id="heroSubtitle"></p>
   </div>
 </header>
 
+<!-- ===============================
+     ALBUM TILES
+================================ -->
 <main class="album-section">
   <div class="album-tiles" id="albumTiles"></div>
 </main>
 
-<script src="data/albums.js"></script>
+<!-- ===============================
+     SCRIPTS
+================================ -->
+
+<!-- Central site + album registry -->
+<script src="albums/index.js"></script>
 
 <script>
-  if (typeof albums === "undefined") {
-    document.getElementById("albumTiles").innerHTML =
-      "<p style='color:red'>albums.js not loaded</p>";
-  } else {
-    const container = document.getElementById("albumTiles");
+/* ===============================
+   HOMEPAGE INITIALIZATION
+================================ */
 
-    albums.forEach(album => {
-      const tile = document.createElement("a");
-      tile.href = `album.html?album=${album.id}`;
-      tile.className = "album-tile";
-      tile.innerHTML = `
-        <img src="${album.tileImage}">
-        <div class="tile-overlay"><span>${album.title}</span></div>
-      `;
-      container.appendChild(tile);
-    });
-  }
+const tilesContainer = document.getElementById("albumTiles");
+
+/* ----- HERO CONTENT ----- */
+document.getElementById("heroImage").src = siteConfig.heroImage;
+document.getElementById("heroTitle").textContent = siteConfig.heroTitle;
+document.getElementById("heroSubtitle").textContent = siteConfig.heroSubtitle;
+
+/* ----- ALBUM TILES ----- */
+albumsIndex.forEach(entry => {
+  /* Load album metadata dynamically */
+  const script = document.createElement("script");
+  script.src = `images/${entry.id}/album.js`;
+
+  script.onload = () => {
+    createAlbumTile(entry);
+  };
+
+  script.onerror = () => {
+    console.error(`Failed to load album: ${entry.id}`);
+  };
+
+  document.body.appendChild(script);
+});
+
+function createAlbumTile(entry) {
+  /* albumData is provided by album.js */
+  const tile = document.createElement("a");
+  tile.href = `album.html?album=${entry.id}`;
+  tile.className = "album-tile";
+
+  tile.innerHTML = `
+    <img src="images/${entry.id}/${entry.cover}" alt="${albumData.title}">
+    <div class="tile-overlay">
+      <div>
+        <span>${albumData.title}</span>
+      </div>
+    </div>
+  `;
+
+  tilesContainer.appendChild(tile);
+}
 </script>
 
 </body>

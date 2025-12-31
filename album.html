@@ -8,15 +8,17 @@
 </head>
 
 <body>
-    <!-- HOME BUTTON -->
-<a href="index.html" class="album-home-btn">⌂ Home</a>
 
-<!-- ===== ALBUM HERO ===== -->
+<!-- TOP-RIGHT HOME ICON -->
+<a href="index.html" class="album-top-icon" title="Back to Home">⌂</a>
+
+<!-- ALBUM HERO -->
 <section class="album-hero">
   <img id="albumHeroImage" alt="Album hero">
 
   <div class="album-hero-overlay">
     <h2 id="albumTitle"></h2>
+    <p id="albumSubtitle"></p>
 
     <div class="album-hero-actions">
       <button onclick="startAlbumSlideshow()">▶ Slideshow</button>
@@ -25,41 +27,55 @@
   </div>
 </section>
 
-<!-- ===== IMAGE GRID ===== -->
+<!-- IMAGE GRID -->
 <div class="grid" id="gallery"></div>
-
-<script src="data/albums.js"></script>
 
 <script>
   const params = new URLSearchParams(window.location.search);
   const albumId = params.get("album");
 
-  const album = albums.find(a => a.id === albumId);
+  if (!albumId) {
+    document.body.innerHTML = "<p>Album not specified</p>";
+  }
 
-  /* ===== HERO IMAGE =====
-     Use the FIRST image as hero
-     (you can later add album.cover if you want)
-  */
-  document.getElementById("albumHeroImage").src =
-    `images/${albumId}/${album.images[0]}`;
+  /* Dynamically load album metadata */
+  const script = document.createElement("script");
+  script.src = `images/${albumId}/album.js`;
 
-  document.getElementById("albumTitle").textContent = album.title;
+  script.onload = () => initAlbum();
+  script.onerror = () => {
+    document.body.innerHTML = "<p>Album not found</p>";
+  };
 
-  /* ===== GRID ===== */
-  const gallery = document.getElementById("gallery");
+  document.body.appendChild(script);
 
-  album.images.forEach(img => {
-    const link = document.createElement("a");
-    link.href = `viewer.html?album=${albumId}&img=${img}`;
-    link.innerHTML = `<img src="images/${albumId}/${img}" alt="">`;
-    gallery.appendChild(link);
-  });
+  function initAlbum() {
+    /* HERO */
+    document.getElementById("albumHeroImage").src =
+      `images/${albumId}/1.jpg`;
 
-  /* ===== ACTIONS ===== */
-function startAlbumSlideshow() {
-  window.location.href =
-    `viewer.html?album=${albumId}&img=${album.images[0]}&slideshow=1`;
-}
+    document.getElementById("albumTitle").textContent =
+      albumData.title;
+
+    document.getElementById("albumSubtitle").textContent =
+      albumData.subtitle || "";
+
+    /* GRID */
+    const gallery = document.getElementById("gallery");
+
+    for (let i = 1; i <= albumData.count; i++) {
+      const link = document.createElement("a");
+      link.href = `viewer.html?album=${albumId}&img=${i}`;
+      link.innerHTML = `<img src="images/${albumId}/${i}.jpg" alt="">`;
+      gallery.appendChild(link);
+    }
+  }
+
+  function startAlbumSlideshow() {
+    window.location.href =
+      `viewer.html?album=${albumId}&img=1&slideshow=1`;
+  }
+
   function shareAlbum() {
     navigator.clipboard.writeText(window.location.href);
     alert("Album link copied");

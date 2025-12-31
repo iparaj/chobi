@@ -3,7 +3,7 @@ const albumData = {
   title: "Singapore 2025",
   subtitle: "Street · City · Night",
 
-  count: 3,
+  count: 4,
 
   images: {
     1: {
@@ -29,6 +29,16 @@ const albumData = {
       lens: "16–35mm",
       exposure: "1/8s · f/11 · ISO 100",
       description: "Futuristic architecture at dusk"
+      
+    },
+    4: {
+      title: "Gardens by the Bay",
+      location: "Singapore",
+      camera: "Sony A7R IV",
+      lens: "16–35mm",
+      exposure: "1/8s · f/11 · ISO 100",
+      description: "Futuristic architecture at dusk"
+      
     }
   }
 };

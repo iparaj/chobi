@@ -3,7 +3,7 @@
 ================================ */
 const siteConfig = {
   heroImage: "images/album-a/1.jpg",
-  heroTitle: "Your Name",
+  heroTitle: "iParaj",
   heroSubtitle: "Photography · Travel · Landscape"
 };
 

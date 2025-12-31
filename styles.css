@@ -65,7 +65,7 @@
 
 .album-tile img {
   width: 100%;
-  height: 200px;              /* REDUCED */
+  height: 200px;
   object-fit: cover;
   transition: transform 0.35s ease;
 }
@@ -93,11 +93,11 @@
    ALBUM GRID
 ================================ */
 .grid {
-  max-width: 1200px;          /* REDUCED */
+  max-width: 1200px;
   margin: 40px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;                   /* TIGHTER */
+  gap: 8px;
 }
 
 .grid a {
@@ -108,7 +108,7 @@
 
 .grid img {
   width: 100%;
-  height: 220px;              /* REDUCED */
+  height: 220px;
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
@@ -336,4 +336,11 @@
   .viewer-main {
     padding-left: 0;
   }
+}
+
+/* ===============================
+   ALBUM PAGE HERO OVERRIDE (FINAL)
+================================ */
+.album-page .hero {
+  height: 25vh;
 }

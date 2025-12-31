@@ -162,6 +162,15 @@
 }
 
 /* Main image area */
+/* Center image perfectly */
+.viewer-main {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Prevent oversized images */
 .viewer-main img {
   max-width: 90vw;
   max-height: 90vh;

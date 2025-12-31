@@ -21,20 +21,20 @@
 <div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
 <div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
 
-<!-- MAIN IMAGE -->
+<!-- MAIN IMAGE (CENTERED) -->
 <div class="viewer-main">
   <img id="mainImage" alt="Viewing image">
 </div>
 
 <script>
 /* ===============================
-   BASIC CONFIG
+   CONFIG
 ================================ */
 const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album") || "album-a";
 let currentIndex = parseInt(params.get("img"), 10) || 1;
 
-/* 🔴 CHANGE THIS to number of images in album */
+/* 🔴 SET THIS TO NUMBER OF IMAGES */
 const IMAGE_COUNT = 5;
 
 /* ===============================
@@ -44,7 +44,7 @@ let slideshowTimer = null;
 let isPlaying = false;
 
 /* ===============================
-   IMAGE LOAD
+   LOAD IMAGE
 ================================ */
 function loadImage() {
   document.getElementById("mainImage").src =
@@ -71,23 +71,6 @@ function prevImage() {
 /* ===============================
    SLIDESHOW (PLAY / PAUSE)
 ================================ */
-function startSlideshow() {
-  if (isPlaying) return;
-
-  isPlaying = true;
-  updatePlayButton();
-
-  slideshowTimer = setInterval(nextImage, 3000);
-}
-
-function pauseSlideshow() {
-  isPlaying = false;
-  updatePlayButton();
-
-  clearInterval(slideshowTimer);
-  slideshowTimer = null;
-}
-
 function toggleSlideshow() {
   if (isPlaying) {
     pauseSlideshow();
@@ -96,9 +79,23 @@ function toggleSlideshow() {
   }
 }
 
-function updatePlayButton() {
-  const btn = document.getElementById("slideshowBtn");
-  btn.textContent = isPlaying ? "⏸" : "▶";
+function startSlideshow() {
+  if (isPlaying) return;
+
+  isPlaying = true;
+  updateButton();
+  slideshowTimer = setInterval(nextImage, 3000);
+}
+
+function pauseSlideshow() {
+  isPlaying = false;
+  updateButton();
+  clearInterval(slideshowTimer);
+}
+
+function updateButton() {
+  document.getElementById("slideshowBtn").textContent =
+    isPlaying ? "⏸" : "▶";
 }
 
 /* ===============================

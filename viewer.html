@@ -10,7 +10,7 @@
 <body class="viewer">
 
 <!-- CLOSE -->
-<button class="close-btn" onclick="exitViewer()">✕</button>
+<button class="close-btn viewer-ui" onclick="exitViewer()">✕</button>
 
 <!-- LEFT SIDEBAR -->
 <div class="sidebar viewer-ui">
@@ -29,12 +29,10 @@
   <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
 
-    <!-- CAPTION -->
-    <div class="viewer-hover" id="viewerCaption">
-      <div class="viewer-hover-text">
-        <h3 id="captionTitle"></h3>
-        <p id="captionSubtitle"></p>
-      </div>
+    <!-- CAPTION (BOTTOM) -->
+    <div class="viewer-caption" id="viewerCaption">
+      <h3 id="captionTitle"></h3>
+      <p id="captionSubtitle"></p>
     </div>
   </div>
 </div>
@@ -58,6 +56,7 @@ let currentIndex = parseInt(params.get("img"), 10) || 1;
 
 let slideshowTimer = null;
 let uiTimer = null;
+let captionTimer = null;
 
 /* ===============================
    LOAD ALBUM DATA
@@ -65,13 +64,15 @@ let uiTimer = null;
 const script = document.createElement("script");
 script.src = `images/${albumId}/album.js`;
 script.onload = initViewer;
+script.onerror = () => alert("album.js not found");
 document.body.appendChild(script);
 
 function initViewer() {
   loadImage(currentIndex);
 
-  const overlay = document.getElementById("slideshowStart");
-  if (autoSlideshow) overlay.classList.add("show");
+  if (autoSlideshow) {
+    document.getElementById("slideshowStart").classList.add("show");
+  }
 
   document.addEventListener("mousemove", showUI);
 }
@@ -155,27 +156,33 @@ function confirmStartSlideshow() {
 }
 
 /* ===============================
-   UI AUTO-HIDE
+   UI AUTO-HIDE (FIXED)
 ================================ */
 function showUI() {
-  document.querySelectorAll(".viewer-ui").forEach(el => el.style.opacity = 1);
+  document.querySelectorAll(".viewer-ui").forEach(el => {
+    el.classList.add("show");
+  });
+
   clearTimeout(uiTimer);
   uiTimer = setTimeout(() => {
-    document.querySelectorAll(".viewer-ui").forEach(el => el.style.opacity = 0);
+    document.querySelectorAll(".viewer-ui").forEach(el => {
+      el.classList.remove("show");
+    });
   }, 2000);
 }
 
 /* ===============================
-   CAPTION AUTO-HIDE
+   CAPTION AUTO-HIDE (FIXED)
 ================================ */
-let captionTimer = null;
 const caption = document.getElementById("viewerCaption");
 const wrapper = document.getElementById("imageWrapper");
 
 wrapper.addEventListener("mousemove", () => {
   caption.classList.add("show");
   clearTimeout(captionTimer);
-  captionTimer = setTimeout(() => caption.classList.remove("show"), 2000);
+  captionTimer = setTimeout(() => {
+    caption.classList.remove("show");
+  }, 2000);
 });
 
 /* ===============================

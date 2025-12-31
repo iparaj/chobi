@@ -15,7 +15,7 @@
 <!-- LEFT SIDEBAR -->
 <div class="sidebar viewer-ui">
   <button onclick="toggleFullscreen()">⛶</button>
-  <button onclick="startSlideshow()">▶</button>
+  <button onclick="showSlideshowOverlay()">▶</button>
   <button onclick="toggleInfo()">ℹ</button>
   <button onclick="shareImage()">🔗</button>
 </div>
@@ -29,7 +29,7 @@
   <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
 
-    <!-- CAPTION (BOTTOM) -->
+    <!-- CAPTION -->
     <div class="viewer-caption" id="viewerCaption">
       <h3 id="captionTitle"></h3>
       <p id="captionSubtitle"></p>
@@ -51,7 +51,6 @@
 ================================ */
 const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album");
-const autoSlideshow = params.get("slideshow") === "1";
 let currentIndex = parseInt(params.get("img"), 10) || 1;
 
 let slideshowTimer = null;
@@ -69,11 +68,6 @@ document.body.appendChild(script);
 
 function initViewer() {
   loadImage(currentIndex);
-
-  if (autoSlideshow) {
-    document.getElementById("slideshowStart").classList.add("show");
-  }
-
   document.addEventListener("mousemove", showUI);
 }
 
@@ -116,6 +110,7 @@ function goTo(index) {
 }
 
 function exitViewer() {
+  stopSlideshow();
   window.location.href = `album.html?album=${albumId}`;
 }
 
@@ -140,23 +135,37 @@ function shareImage() {
 }
 
 /* ===============================
-   SLIDESHOW
+   SLIDESHOW (CORRECT FULLSCREEN FLOW)
 ================================ */
-function startSlideshow() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  }
-  clearInterval(slideshowTimer);
-  slideshowTimer = setInterval(nextImage, 3000);
+function showSlideshowOverlay() {
+  document.getElementById("slideshowStart").classList.add("show");
 }
 
 function confirmStartSlideshow() {
   document.getElementById("slideshowStart").classList.remove("show");
-  startSlideshow();
+
+  // Fullscreen MUST be requested directly from click
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen()
+      .then(startSlideshow)
+      .catch(startSlideshow);
+  } else {
+    startSlideshow();
+  }
+}
+
+function startSlideshow() {
+  stopSlideshow();
+  slideshowTimer = setInterval(nextImage, 3000);
+}
+
+function stopSlideshow() {
+  clearInterval(slideshowTimer);
+  slideshowTimer = null;
 }
 
 /* ===============================
-   UI AUTO-HIDE (FIXED)
+   UI AUTO-HIDE
 ================================ */
 function showUI() {
   document.querySelectorAll(".viewer-ui").forEach(el => {
@@ -172,7 +181,7 @@ function showUI() {
 }
 
 /* ===============================
-   CAPTION AUTO-HIDE (FIXED)
+   CAPTION AUTO-HIDE
 ================================ */
 const caption = document.getElementById("viewerCaption");
 const wrapper = document.getElementById("imageWrapper");

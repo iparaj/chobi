@@ -1,32 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Album</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- HOME BUTTON -->
+<a href="index.html" class="album-home-btn">⌂ Home</a>
+
+<!-- ===== ALBUM HERO ===== -->
+<section class="album-hero">
+  <img id="albumHeroImage" alt="Album hero">
+
+  <div class="album-hero-overlay">
+    <h2 id="albumTitle"></h2>
+
+    <div class="album-hero-actions">
+      <button onclick="startAlbumSlideshow()">▶ Slideshow</button>
+      <button onclick="shareAlbum()">🔗 Share</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMAGE GRID ===== -->
+<div class="grid" id="gallery"></div>
+
+<script src="data/albums.js"></script>
+
 <script>
   const params = new URLSearchParams(window.location.search);
   const albumId = params.get("album");
 
-  const script = document.createElement("script");
-  script.src = `albums/${albumId}/album.js`;
+  const album = albums.find(a => a.id === albumId);
 
-  script.onload = () => {
-    initAlbum();
-  };
+  /* ===== HERO IMAGE =====
+     Use the FIRST image as hero
+     (you can later add album.cover if you want)
+  */
+  document.getElementById("albumHeroImage").src =
+    `images/${albumId}/${album.images[0]}`;
 
-  document.body.appendChild(script);
+  document.getElementById("albumTitle").textContent = album.title;
 
-  function initAlbum() {
-    /* HERO */
-    document.getElementById("albumHeroImage").src =
-      `albums/${albumId}/1.jpg`;
+  /* ===== GRID ===== */
+  const gallery = document.getElementById("gallery");
 
-    document.getElementById("albumTitle").textContent =
-      albumData.title;
+  album.images.forEach(img => {
+    const link = document.createElement("a");
+    link.href = `viewer.html?album=${albumId}&img=${img}`;
+    link.innerHTML = `<img src="images/${albumId}/${img}" alt="">`;
+    gallery.appendChild(link);
+  });
 
-    /* GRID */
-    const gallery = document.getElementById("gallery");
-
-    for (let i = 1; i <= albumData.count; i++) {
-      const link = document.createElement("a");
-      link.href = `viewer.html?album=${albumId}&img=${i}`;
-      link.innerHTML = `<img src="albums/${albumId}/${i}.jpg">`;
-      gallery.appendChild(link);
-    }
+  /* ===== ACTIONS ===== */
+function startAlbumSlideshow() {
+  window.location.href =
+    `viewer.html?album=${albumId}&img=${album.images[0]}&slideshow=1`;
+}
+  function shareAlbum() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Album link copied");
   }
 </script>
+
+</body>
+</html>

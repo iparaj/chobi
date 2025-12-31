@@ -29,7 +29,7 @@
   <div class="viewer-image-wrapper" id="imageWrapper">
     <img id="mainImage" alt="Viewing image">
 
-    <!-- HOVER CAPTION -->
+    <!-- CAPTION -->
     <div class="viewer-hover" id="viewerCaption">
       <div class="viewer-hover-text">
         <h3 id="captionTitle"></h3>
@@ -42,147 +42,150 @@
 <!-- INFO PANEL -->
 <div class="info-panel" id="infoPanel"></div>
 
-<!-- SLIDESHOW START OVERLAY -->
+<!-- SLIDESHOW CONFIRM OVERLAY -->
 <div class="slideshow-start" id="slideshowStart">
   <button onclick="confirmStartSlideshow()">▶ Start Slideshow</button>
 </div>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const albumId = params.get("album");
-  const imgIndex = parseInt(params.get("img"), 10) || 1;
-  const autoSlideshow = params.get("slideshow") === "1";
+/* ===============================
+   PARAMS
+================================ */
+const params = new URLSearchParams(window.location.search);
+const albumId = params.get("album");
+const autoSlideshow = params.get("slideshow") === "1";
+let currentIndex = parseInt(params.get("img"), 10) || 1;
 
-  let currentIndex = imgIndex;
-  let slideshowTimer = null;
-  let uiTimer = null;
+let slideshowTimer = null;
+let uiTimer = null;
 
-  /* Load album metadata */
-  const script = document.createElement("script");
-  script.src = `images/${albumId}/album.js`;
-  script.onload = () => initViewer();
-  document.body.appendChild(script);
+/* ===============================
+   LOAD ALBUM DATA
+================================ */
+const script = document.createElement("script");
+script.src = `images/${albumId}/album.js`;
+script.onload = initViewer;
+document.body.appendChild(script);
 
-  function initViewer() {
-    loadImage(currentIndex);
+function initViewer() {
+  loadImage(currentIndex);
 
-    if (!autoSlideshow) {
-      document.getElementById("slideshowStart").style.display = "none";
-    }
+  const overlay = document.getElementById("slideshowStart");
+  if (autoSlideshow) overlay.classList.add("show");
 
-    document.addEventListener("mousemove", showUI);
+  document.addEventListener("mousemove", showUI);
+}
+
+/* ===============================
+   IMAGE LOAD
+================================ */
+function loadImage(index) {
+  currentIndex = index;
+  document.getElementById("mainImage").src =
+    `images/${albumId}/${index}.jpg`;
+
+  const info = albumData.images[index] || {};
+  document.getElementById("captionTitle").textContent = info.title || "";
+  document.getElementById("captionSubtitle").textContent = info.location || "";
+
+  document.getElementById("infoPanel").innerHTML = `
+    <h3>${info.title || ""}</h3>
+    <p><b>Camera:</b> ${info.camera || ""}</p>
+    <p><b>Lens:</b> ${info.lens || ""}</p>
+    <p><b>Exposure:</b> ${info.exposure || ""}</p>
+    <p><b>Location:</b> ${info.location || ""}</p>
+    <p>${info.description || ""}</p>
+  `;
+}
+
+/* ===============================
+   NAVIGATION
+================================ */
+function nextImage() {
+  goTo(currentIndex >= albumData.count ? 1 : currentIndex + 1);
+}
+
+function prevImage() {
+  goTo(currentIndex <= 1 ? albumData.count : currentIndex - 1);
+}
+
+function goTo(index) {
+  window.location.href =
+    `viewer.html?album=${albumId}&img=${index}`;
+}
+
+function exitViewer() {
+  window.location.href = `album.html?album=${albumId}`;
+}
+
+/* ===============================
+   CONTROLS
+================================ */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
   }
+}
 
-  function loadImage(index) {
-    currentIndex = index;
+function toggleInfo() {
+  document.getElementById("infoPanel").classList.toggle("show");
+}
 
-    const imgPath = `images/${albumId}/${index}.jpg`;
-    document.getElementById("mainImage").src = imgPath;
+function shareImage() {
+  navigator.clipboard.writeText(window.location.href);
+  alert("Link copied");
+}
 
-    const info = albumData.images[index] || {};
-
-    document.getElementById("captionTitle").textContent =
-      info.title || "";
-
-    document.getElementById("captionSubtitle").textContent =
-      info.location || "";
-
-    document.getElementById("infoPanel").innerHTML = `
-      <h3>${info.title || ""}</h3>
-      <p><b>Camera:</b> ${info.camera || ""}</p>
-      <p><b>Lens:</b> ${info.lens || ""}</p>
-      <p><b>Exposure:</b> ${info.exposure || ""}</p>
-      <p><b>Location:</b> ${info.location || ""}</p>
-      <p>${info.description || ""}</p>
-    `;
+/* ===============================
+   SLIDESHOW
+================================ */
+function startSlideshow() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
   }
+  clearInterval(slideshowTimer);
+  slideshowTimer = setInterval(nextImage, 3000);
+}
 
-  /* NAVIGATION */
-  function nextImage() {
-    const next = currentIndex >= albumData.count ? 1 : currentIndex + 1;
-    goTo(next);
-  }
+function confirmStartSlideshow() {
+  document.getElementById("slideshowStart").classList.remove("show");
+  startSlideshow();
+}
 
-  function prevImage() {
-    const prev = currentIndex <= 1 ? albumData.count : currentIndex - 1;
-    goTo(prev);
-  }
+/* ===============================
+   UI AUTO-HIDE
+================================ */
+function showUI() {
+  document.querySelectorAll(".viewer-ui").forEach(el => el.style.opacity = 1);
+  clearTimeout(uiTimer);
+  uiTimer = setTimeout(() => {
+    document.querySelectorAll(".viewer-ui").forEach(el => el.style.opacity = 0);
+  }, 2000);
+}
 
-  function goTo(index) {
-    window.location.href =
-      `viewer.html?album=${albumId}&img=${index}`;
-  }
+/* ===============================
+   CAPTION AUTO-HIDE
+================================ */
+let captionTimer = null;
+const caption = document.getElementById("viewerCaption");
+const wrapper = document.getElementById("imageWrapper");
 
-  function exitViewer() {
-    window.location.href = `album.html?album=${albumId}`;
-  }
+wrapper.addEventListener("mousemove", () => {
+  caption.classList.add("show");
+  clearTimeout(captionTimer);
+  captionTimer = setTimeout(() => caption.classList.remove("show"), 2000);
+});
 
-  /* CONTROLS */
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  }
-
-  function toggleInfo() {
-    document.getElementById("infoPanel").classList.toggle("show");
-  }
-
-  function shareImage() {
-    navigator.clipboard.writeText(window.location.href);
-    alert("Link copied");
-  }
-
-  /* SLIDESHOW */
-  function startSlideshow() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
-
-    clearInterval(slideshowTimer);
-    slideshowTimer = setInterval(nextImage, 3000);
-  }
-
-  function confirmStartSlideshow() {
-    document.getElementById("slideshowStart").style.display = "none";
-    startSlideshow();
-  }
-
-  /* UI AUTO-HIDE */
-  function showUI() {
-    document.querySelectorAll(".viewer-ui").forEach(el => {
-      el.style.opacity = 1;
-    });
-
-    clearTimeout(uiTimer);
-    uiTimer = setTimeout(() => {
-      document.querySelectorAll(".viewer-ui").forEach(el => {
-        el.style.opacity = 0;
-      });
-    }, 2000);
-  }
-
-  /* CAPTION AUTO-HIDE */
-  let captionTimer = null;
-  const caption = document.getElementById("viewerCaption");
-  const imageWrapper = document.getElementById("imageWrapper");
-
-  imageWrapper.addEventListener("mousemove", () => {
-    caption.classList.add("show");
-    clearTimeout(captionTimer);
-    captionTimer = setTimeout(() => {
-      caption.classList.remove("show");
-    }, 2000);
-  });
-
-  /* KEYBOARD */
-  document.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight") nextImage();
-    if (e.key === "ArrowLeft") prevImage();
-    if (e.key === "Escape") exitViewer();
-  });
+/* ===============================
+   KEYBOARD
+================================ */
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") nextImage();
+  if (e.key === "ArrowLeft") prevImage();
+  if (e.key === "Escape") exitViewer();
+});
 </script>
 
 </body>

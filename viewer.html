@@ -10,21 +10,34 @@
 <body class="viewer">
 
 <!-- CLOSE -->
-<button class="close-btn" onclick="exitViewer()">✕</button>
+<button class="close-btn viewer-ui" onclick="exitViewer()">✕</button>
 
 <!-- LEFT SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar viewer-ui">
   <button id="slideshowBtn" onclick="toggleSlideshow()">▶</button>
+  <button onclick="toggleFullscreen()">⛶</button>
+  <button onclick="toggleInfo()">ℹ</button>
 </div>
 
 <!-- ARROWS -->
-<div class="nav-arrow nav-left" onclick="prevImage()">❮</div>
-<div class="nav-arrow nav-right" onclick="nextImage()">❯</div>
+<div class="nav-arrow nav-left viewer-ui" onclick="prevImage()">❮</div>
+<div class="nav-arrow nav-right viewer-ui" onclick="nextImage()">❯</div>
 
-<!-- MAIN IMAGE (CENTERED) -->
+<!-- MAIN IMAGE -->
 <div class="viewer-main">
-  <img id="mainImage" alt="Viewing image">
+  <div class="viewer-image-wrapper" id="imageWrapper">
+    <img id="mainImage" alt="Viewing image">
+
+    <!-- CAPTION -->
+    <div class="viewer-caption" id="viewerCaption">
+      <h3 id="captionTitle"></h3>
+      <p id="captionSubtitle"></p>
+    </div>
+  </div>
 </div>
+
+<!-- INFO PANEL -->
+<div class="info-panel" id="infoPanel"></div>
 
 <script>
 /* ===============================
@@ -34,7 +47,7 @@ const params = new URLSearchParams(window.location.search);
 const albumId = params.get("album") || "album-a";
 let currentIndex = parseInt(params.get("img"), 10) || 1;
 
-/* 🔴 SET THIS TO NUMBER OF IMAGES */
+/* 🔴 CHANGE THIS */
 const IMAGE_COUNT = 5;
 
 /* ===============================
@@ -42,6 +55,8 @@ const IMAGE_COUNT = 5;
 ================================ */
 let slideshowTimer = null;
 let isPlaying = false;
+let uiTimer = null;
+let captionTimer = null;
 
 /* ===============================
    LOAD IMAGE
@@ -49,6 +64,12 @@ let isPlaying = false;
 function loadImage() {
   document.getElementById("mainImage").src =
     `images/${albumId}/${currentIndex}.jpg`;
+
+  /* TEMP titles — replace with album.js later */
+  document.getElementById("captionTitle").textContent =
+    `Image ${currentIndex}`;
+  document.getElementById("captionSubtitle").textContent =
+    `Album ${albumId}`;
 }
 
 loadImage();
@@ -57,45 +78,52 @@ loadImage();
    NAVIGATION
 ================================ */
 function nextImage() {
-  currentIndex++;
-  if (currentIndex > IMAGE_COUNT) currentIndex = 1;
+  currentIndex = currentIndex >= IMAGE_COUNT ? 1 : currentIndex + 1;
   loadImage();
 }
 
 function prevImage() {
-  currentIndex--;
-  if (currentIndex < 1) currentIndex = IMAGE_COUNT;
+  currentIndex = currentIndex <= 1 ? IMAGE_COUNT : currentIndex - 1;
   loadImage();
 }
 
 /* ===============================
-   SLIDESHOW (PLAY / PAUSE)
+   SLIDESHOW
 ================================ */
 function toggleSlideshow() {
-  if (isPlaying) {
-    pauseSlideshow();
-  } else {
-    startSlideshow();
-  }
+  isPlaying ? pauseSlideshow() : startSlideshow();
 }
 
 function startSlideshow() {
-  if (isPlaying) return;
-
   isPlaying = true;
-  updateButton();
+  updateSlideshowButton();
   slideshowTimer = setInterval(nextImage, 3000);
 }
 
 function pauseSlideshow() {
   isPlaying = false;
-  updateButton();
+  updateSlideshowButton();
   clearInterval(slideshowTimer);
 }
 
-function updateButton() {
+function updateSlideshowButton() {
   document.getElementById("slideshowBtn").textContent =
     isPlaying ? "⏸" : "▶";
+}
+
+/* ===============================
+   CONTROLS
+================================ */
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+function toggleInfo() {
+  document.getElementById("infoPanel").classList.toggle("show");
 }
 
 /* ===============================
@@ -105,6 +133,38 @@ function exitViewer() {
   pauseSlideshow();
   window.location.href = `album.html?album=${albumId}`;
 }
+
+/* ===============================
+   UI AUTO-HIDE
+================================ */
+function showUI() {
+  document.querySelectorAll(".viewer-ui").forEach(el =>
+    el.classList.add("show")
+  );
+
+  clearTimeout(uiTimer);
+  uiTimer = setTimeout(() => {
+    document.querySelectorAll(".viewer-ui").forEach(el =>
+      el.classList.remove("show")
+    );
+  }, 2000);
+}
+
+document.addEventListener("mousemove", showUI);
+
+/* ===============================
+   CAPTION HOVER
+================================ */
+const wrapper = document.getElementById("imageWrapper");
+const caption = document.getElementById("viewerCaption");
+
+wrapper.addEventListener("mousemove", () => {
+  caption.classList.add("show");
+  clearTimeout(captionTimer);
+  captionTimer = setTimeout(() => {
+    caption.classList.remove("show");
+  }, 2000);
+});
 
 /* ===============================
    KEYBOARD

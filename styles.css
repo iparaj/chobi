@@ -8,122 +8,7 @@
 }
 
 /* ===============================
-   HERO (HOMEPAGE)
-================================ */
-.hero {
-  position: relative;
-  height: 80vh;
-  overflow: hidden;
-}
-
-.hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  background: rgba(0, 0, 0, 0.35);
-  text-align: center;
-}
-
-.hero-overlay h1 {
-  font-size: 3.5rem;
-  letter-spacing: 2px;
-}
-
-.hero-overlay p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-}
-
-/* ===============================
-   HOMEPAGE ALBUM TILES
-================================ */
-.album-section {
-  padding: 60px 40px;
-}
-
-.album-tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-}
-
-.album-tile {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.album-tile img {
-  width: 100%;
-  height: 260px;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.album-tile:hover img {
-  transform: scale(1.08);
-}
-
-.tile-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.tile-overlay span {
-  color: white;
-  font-size: 1.6rem;
-  letter-spacing: 1px;
-}
-
-/* ===============================
-   ALBUM IMAGE GRID
-================================ */
-.grid {
-  max-width: 1300px;
-  margin: 40px auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.grid a {
-  display: block;
-  line-height: 0;           /* removes ghost spacing */
-  text-decoration: none;
-}
-
-/* Album image sizing */
-.grid img {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 6px;
-  display: block;
-  cursor: pointer;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.grid img:hover {
-  transform: scale(1.03);
-  opacity: 0.95;
-}
-
-/* ===============================
-   IMAGE VIEWER
+   VIEWER BASE
 ================================ */
 .viewer {
   background: #0f0f0f;
@@ -132,37 +17,9 @@
   overflow: hidden;
 }
 
-/* Sidebar */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 60px;
-  height: 100vh;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-  gap: 18px;
-  z-index: 20;
-}
-
-.sidebar button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  opacity: 0.8;
-}
-
-.sidebar button:hover {
-  opacity: 1;
-}
-
-/* Main image area */
-/* Center image perfectly */
+/* ===============================
+   CENTER IMAGE
+================================ */
 .viewer-main {
   height: 100vh;
   display: flex;
@@ -170,7 +27,6 @@
   align-items: center;
 }
 
-/* Prevent oversized images */
 .viewer-main img {
   max-width: 90vw;
   max-height: 90vh;
@@ -179,21 +35,14 @@
 }
 
 /* ===============================
-   VIEWER IMAGE
+   IMAGE WRAPPER
 ================================ */
 .viewer-image-wrapper {
   position: relative;
 }
 
-.viewer-image-wrapper img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 6px;
-}
-
 /* ===============================
-   VIEWER CAPTION (BOTTOM, JS-CONTROLLED)
+   CAPTION (HOVER ONLY)
 ================================ */
 .viewer-caption {
   position: absolute;
@@ -203,8 +52,8 @@
   padding: 14px 18px;
   color: white;
   opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .viewer-caption.show {
@@ -223,7 +72,38 @@
 }
 
 /* ===============================
-   VIEWER CLOSE BUTTON
+   LEFT SIDEBAR
+================================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 18px;
+  z-index: 30;
+}
+
+.sidebar button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.sidebar button:hover {
+  opacity: 1;
+}
+
+/* ===============================
+   CLOSE BUTTON
 ================================ */
 .close-btn {
   position: fixed;
@@ -232,22 +112,49 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0,0,0,0.65);
   color: white;
   border: none;
   font-size: 22px;
   line-height: 36px;
   text-align: center;
   cursor: pointer;
-  z-index: 9999;
+  z-index: 40;
 }
 
 .close-btn:hover {
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0,0,0,0.9);
 }
 
 /* ===============================
-   INFO PANEL (VIEWER)
+   NAVIGATION ARROWS
+================================ */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 48px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.7;
+  z-index: 30;
+}
+
+.nav-arrow:hover {
+  opacity: 1;
+}
+
+.nav-left {
+  left: 90px;
+}
+
+.nav-right {
+  right: 30px;
+}
+
+/* ===============================
+   INFO PANEL
 ================================ */
 .info-panel {
   position: fixed;
@@ -259,7 +166,7 @@
   color: white;
   padding: 20px;
   transition: right 0.35s ease;
-  z-index: 30;
+  z-index: 50;
   overflow-y: auto;
 }
 
@@ -278,51 +185,12 @@
 }
 
 /* ===============================
-   VIEWER NAVIGATION ARROWS
-================================ */
-.nav-arrow {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 48px;
-  color: white;
-  cursor: pointer;
-  user-select: none;
-  opacity: 0.7;
-  z-index: 50;
-}
-
-.nav-arrow:hover {
-  opacity: 1;
-}
-
-.nav-left {
-  left: 90px;
-}
-
-.nav-right {
-  right: 30px;
-}
-
-/* ===============================
-   MOBILE / TABLET
-================================ */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-
-  .grid img {
-    height: 160px;
-  }
-}
-/* ===============================
-   AUTO-HIDE VIEWER UI
+   AUTO-HIDE UI
 ================================ */
 .viewer-ui {
   opacity: 0;
-  transition: opacity 0.4s ease;
   pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 .viewer-ui.show {
@@ -331,123 +199,10 @@
 }
 
 /* ===============================
-   ALBUM HERO SECTION
-================================ */
-.album-hero {
-  position: relative;
-  height: 45vh;
-  overflow: hidden;
-}
-
-.album-hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.album-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  color: white;
-  text-align: center;
-}
-
-.album-hero-overlay h2 {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
-}
-
-.album-hero-actions {
-  display: flex;
-  gap: 20px;
-}
-
-.album-hero-actions button {
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.5);
-  color: white;
-  padding: 12px 22px;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.album-hero-actions button:hover {
-  background: rgba(0,0,0,0.85);
-}
-
-/* ===============================
-   MOBILE TUNING
+   MOBILE SAFETY
 ================================ */
 @media (max-width: 768px) {
-  .album-hero {
-    height: 50vh;
+  .nav-arrow {
+    display: none;
   }
-
-  .album-hero-overlay h2 {
-    font-size: 2rem;
-  }
-}
-/* ===============================
-   ALBUM HOME BUTTON
-================================ */
-.album-home-btn {
-  position: fixed;
-  top: 20px;
-  right: 24px;
-  z-index: 60;
-
-  padding: 10px 16px;
-  background: rgba(0,0,0,0.6);
-  color: white;
-  text-decoration: none;
-  font-size: 0.95rem;
-  letter-spacing: 1px;
-
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 4px;
-
-  transition: background 0.3s ease, opacity 0.3s ease;
-}
-
-.album-home-btn:hover {
-  background: rgba(0,0,0,0.85);
-}
-
-/* ===============================
-   SLIDESHOW START OVERLAY
-================================ */
-.slideshow-start {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: none;            /* IMPORTANT */
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.slideshow-start.show {
-  display: flex;
-}
-
-.slideshow-start button {
-  font-size: 1.4rem;
-  padding: 16px 30px;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  border: 1px solid white;
-  cursor: pointer;
-}
-
-.slideshow-start button:hover {
-  background: rgba(255,255,255,0.25);
 }

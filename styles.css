@@ -22,6 +22,7 @@
 ================================ */
 .viewer-main {
   height: 100vh;
+  padding-left: 60px;      /* matches sidebar width */
   display: flex;
   justify-content: center;
   align-items: center;
